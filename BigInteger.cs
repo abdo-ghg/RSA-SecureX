@@ -350,7 +350,7 @@ namespace RSA_SecureX
         //}
 
 
-        public static BigInteger Sqrt(BigInteger N)//O(log(N)*N ^ 1.585) //checked
+        public static BigInteger Sqrt(BigInteger N)//O(log(N) * N^1.585) //checked
         {
             if (N.digits.Count == 1 && N.digits[0] == 0)//O(1)
                 return new BigInteger("0");//O(1)

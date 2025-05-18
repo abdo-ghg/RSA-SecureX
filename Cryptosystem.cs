@@ -20,38 +20,38 @@ namespace RSA_SecureX
         }
         private static List<TestCase> testCases = new List<TestCase>();
 
-        public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)
+        public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)//total of O(log n * N^1.585)
         {
-            BigInteger result = new BigInteger(1);
-            k = BigInteger.Mod(k, m);
-            BigInteger zero = new BigInteger(0);
-            BigInteger one = new BigInteger(1);
+            BigInteger result = new BigInteger(1);//O(1)
+            k = BigInteger.Mod(k, m);//O(N^1.585)
+            BigInteger zero = new BigInteger(0);//O(1)
+            BigInteger one = new BigInteger(1);//O(log N)
 
-            while (n > zero)
+            while (n > zero)//O(log n)
             {
-                if ((n & one) == one)
+                if ((n & one) == one)//O(N)
                 {
-                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);
+                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)
                 }
 
-                n = n >> 1; //divide by 2
+                n = n >> 1; //O(S* N log N)//divide by 2
 
                 //Pow
-                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);
-            }
-            return result;
+                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)
+            }//total of O(log n * N^1.585)
+            return result;//O(1)
         }
 
 
-        public static BigInteger encrypt(BigInteger e, BigInteger n, BigInteger message)
+        public static BigInteger encrypt(BigInteger e, BigInteger n, BigInteger message)//O(log n * N^1.585)
         {
-            return ExpMod(message, e, n);
+            return ExpMod(message, e, n);// O(log n * N^1.585)
         }
 
 
-        public static BigInteger decrypt(BigInteger d, BigInteger n, BigInteger cipher)
+        public static BigInteger decrypt(BigInteger d, BigInteger n, BigInteger cipher)// O(log n * N^1.585)
         {
-            return ExpMod(cipher, d, n);
+            return ExpMod(cipher, d, n);// O(log n * N^1.585)
         }
 
 
