@@ -7,381 +7,382 @@ using System.Threading.Tasks;
 namespace RSA_SecureX
 {
     internal class BigInteger
+    {
+        public List<byte> digits; // digits stored in little-endian order (LSB first)
+
+        //El Code Da b3mel override l Logical operators zy : == , >= , !=, << , >> , & 
+        public static bool operator <(BigInteger a, BigInteger b) => a.compare(b) < 0; //O(N)
+        public static bool operator >(BigInteger a, BigInteger b) => a.compare(b) > 0;//O(N)
+        public static bool operator ==(BigInteger a, BigInteger b) => a.compare(b) == 0;//O(N)
+        public static bool operator !=(BigInteger a, BigInteger b) => !(a == b);//O(N)
+        public static bool operator <=(BigInteger a, BigInteger b) => a.compare(b) <= 0;//O(N)
+        public static bool operator >=(BigInteger a, BigInteger b) => a.compare(b) >= 0;//O(N)
+        public static BigInteger operator &(BigInteger a, BigInteger b)//O(1)
         {
-            public List<byte> digits; // digits stored in little-endian order (LSB first)
-
-            //El Code Da b3mel override l Logical operators zy : == , >= , !=, << , >> , & 
-            public static bool operator <(BigInteger a, BigInteger b) => a.compare(b) < 0;
-            public static bool operator >(BigInteger a, BigInteger b) => a.compare(b) > 0;
-            public static bool operator ==(BigInteger a, BigInteger b) => a.compare(b) == 0;
-            public static bool operator !=(BigInteger a, BigInteger b) => !(a == b);
-            public static bool operator <=(BigInteger a, BigInteger b) => a.compare(b) <= 0;
-            public static bool operator >=(BigInteger a, BigInteger b) => a.compare(b) >= 0;
-            public static BigInteger operator &(BigInteger a, BigInteger b)
+            if (b.digits.Count == 1 && b.digits[0] == 1)//O(1)
             {
-                if (b.digits.Count == 1 && b.digits[0] == 1)
-                {
-                    return new BigInteger(a.digits[0] & 1);
-                }
-
-                throw new NotImplementedException("Bitwise AND only implemented for (BigInteger & 1)");
-            }
-            public static BigInteger operator >>(BigInteger a, int shift)
-            {
-                BigInteger result = new BigInteger(a);
-
-                for (int i = 0; i < shift; i++)
-                {
-                    result = floor(result, new BigInteger(2));
-                }
-
-                return result;
-            }
-            public static BigInteger operator <<(BigInteger a, int shift)
-            {
-                BigInteger result = new BigInteger(a);
-
-                for (int i = 0; i < shift; i++)
-                {
-                    result = Multiply(result, new BigInteger(2));
-                }
-
-                return result;
+                return new BigInteger(a.digits[0] & 1);//O(1)
             }
 
-            // the constructors
-            public BigInteger()
+            throw new NotImplementedException("Bitwise AND only implemented for (BigInteger & 1)");//O(1)
+        }
+        public static BigInteger operator >>(BigInteger a, int shift)//O(S* N log N) //checked
+        {
+            BigInteger result = new BigInteger(a);//O(1)
+
+            for (int i = 0; i < shift; i++)//O(S)
             {
-                digits = new List<byte>() { 0 };
+                result = floor(result, new BigInteger(2));//O(N log N)+O(log N)= O(N log N)
             }
 
-            public BigInteger(BigInteger a)
+            return result;//O(1)
+        }
+        public static BigInteger operator <<(BigInteger a, int shift)//O(S* N^1.585) //checked
+        {
+            BigInteger result = new BigInteger(a);//O(1)
+
+            for (int i = 0; i < shift; i++)//O(S)
             {
-                digits = a.digits;
+                result = Multiply(result, new BigInteger(2));//O(N^1.585)+O(log N)= O(N^1.585)
             }
 
+            return result;//O(1)
+        }
 
-            public BigInteger(string number)
+        // the constructors
+        public BigInteger()//O(1)
+        {
+            digits = new List<byte>() { 0 };//O(1)
+        }
+
+        public BigInteger(BigInteger a)//O(1)
+        {
+            digits = a.digits;//O(1)
+        }
+
+
+        public BigInteger(string number)//T(N)=N+N then it is O(N) //checked
+        {
+
+            digits = new List<byte>();//O(1)
+            foreach (char c in number.Reverse())//O(N) //reverse is O(1)
             {
 
-                digits = new List<byte>();
-                foreach (char c in number.Reverse())
-                {
-
-                    digits.Add((byte)(c - '0'));
-                }
-
-                removeZeros();
-                if (digits.Count == 0)
-                    digits.Add(0);
+                digits.Add((byte)(c - '0'));//O(1)
             }
-            public BigInteger(List<byte> digits)
-            {
-                this.digits = new List<byte>(digits);
-                removeZeros();
-                if (this.digits.Count == 0)
-                    this.digits.Add(0);
-            }
-            public BigInteger(int num)
-            {
-                digits = new List<byte>();
-                if (num == 0)
-                {
-                    digits.Add(0);
 
-                }
-
-                while (num > 0)
-                {
-                    digits.Add((byte)(num % 10));
-                    num /= 10;
-                }
+            removeZeros();//O(N)
+            if (digits.Count == 0)//O(1)
+                digits.Add(0);//O(1)
+        }
+        public BigInteger(List<byte> digits)//O(N)
+        {
+            this.digits = new List<byte>(digits);//O(N)//because i'm copying the entire input list into a new list 
+            removeZeros();//O(N)
+            if (this.digits.Count == 0)//O(1)
+                this.digits.Add(0);//O(1)
+        }
+        public BigInteger(int num)//O(log N)
+        {
+            digits = new List<byte>();//O(1)
+            if (num == 0)//O(1)
+            {
+                digits.Add(0);//O(1)
 
             }
 
-            // shyl alasfar
-            private void removeZeros()
+            while (num > 0)//O(log N)
             {
-                for (int i = digits.Count - 1; i > 0; i--)
-                {
-                    if (digits[i] == 0)
-                        digits.RemoveAt(i);
-                    else
-                        break;
-                }
+                digits.Add((byte)(num % 10));//O(1)
+                num /= 10;//O(1)
             }
 
-            // 3shan a3ml override l operators zy + , - , * , /
-            public static BigInteger Add(BigInteger firstNum, BigInteger secondNum)
+        }
+
+        // shyl alasfar
+        private void removeZeros() //O(N)
+        {
+            for (int i = digits.Count - 1; i > 0; i--)//O(N)
             {
-                List<byte> result = new List<byte>();
-                int maxLength = Math.Max(firstNum.digits.Count, secondNum.digits.Count);
-                int temp = 0;
-                byte carry = 0;
-                // 3shan a3ml l + operator
-                for (int i = 0; i < maxLength; i++)
-                {
-                    byte digitA = i < firstNum.digits.Count ? firstNum.digits[i] : (byte)0;
-                    byte digitB = i < secondNum.digits.Count ? secondNum.digits[i] : (byte)0;
-
-                    byte sum = (byte)(digitA + digitB + carry);
-                    result.Add((byte)(sum % 10));
-                    carry = (byte)(sum / 10);
-                }
-                if (carry > 0)
-                    result.Add(carry);
-                return new BigInteger(result);
-            }
-            public static BigInteger sub(BigInteger a, BigInteger b)
-            {
-                if (a < b)
-                {
-                    Console.WriteLine("The Second Integer Is Bigger Than The First One"); // The Requiered Class In The Task Only Supports Positive Nums
-                    return new BigInteger(0);
-                }
-
-                return new BigInteger(sub2Lists(a.digits, b.digits));
-            }
-            public static BigInteger Mod(BigInteger a, BigInteger b)
-            {
-                if (a < b)
-                    return new BigInteger(a);
-                if (b == new BigInteger("0"))
-                {
-                    Console.WriteLine("Can Not Divide By 0           Maynf3sh :(");
-                    return new BigInteger(0);
-                }
-                BigInteger temp = floor(a, b);
-                BigInteger result = sub(a, Multiply(temp, b));
-                return result;
-            }
-            public static BigInteger[] Div(BigInteger a, BigInteger b)
-            {
-                // Base case: if a is less than b, quotient is 0 and remainder is a
-                if (a < b)
-                    return new BigInteger[] { new BigInteger(0), a };
-
-                // Calculate 2*b
-                BigInteger twoB = Add(b, b);
-
-                // Recursive call with a and 2*b
-                BigInteger[] temp = Div(a, twoB);
-                BigInteger q = temp[0];
-                BigInteger r = temp[1];
-
-                // Double the quotient (q = 2*q)
-                q = Add(q, q);
-
-                // Check and adjust remainder and quotient if needed
-                if (r < b)
-                    return new BigInteger[] { q, r };
+                if (digits[i] == 0)//O(1)
+                    digits.RemoveAt(i);//O(1)
                 else
-                    return new BigInteger[] { Add(q, new BigInteger(1)), sub(r, b) };
+                    break;//O(1)
             }
-            public static BigInteger Multiply(BigInteger a, BigInteger b)
+        }
+
+        // 3shan a3ml override l operators zy + , - , * , /
+        public static BigInteger Add(BigInteger firstNum, BigInteger secondNum)//T(N)=N+N so it is O(N) //checked
+        {
+            List<byte> result = new List<byte>();//O(1)
+            int maxLength = Math.Max(firstNum.digits.Count, secondNum.digits.Count);//O(1)
+            int temp = 0;//O(1)
+            byte carry = 0;//O(1)
+                           // 3shan a3ml l + operator
+            for (int i = 0; i < maxLength; i++)//O(N)
             {
-                // Check for zero multiplication
-                if ((a.digits.Count == 1 && a.digits[0] == 0) || (b.digits.Count == 1 && b.digits[0] == 0))
-                {
-                    return new BigInteger("0");
-                }
+                byte digitA = i < firstNum.digits.Count ? firstNum.digits[i] : (byte)0;//O(1)
+                byte digitB = i < secondNum.digits.Count ? secondNum.digits[i] : (byte)0;//O(1)
 
-                // Simple multiplication  
-                if (a.digits.Count <= 4 || b.digits.Count <= 4)
-                {
-                    List<byte> result = new List<byte>();
-                    for (int i = 0; i < a.digits.Count + b.digits.Count; i++)
-                    {
-                        result.Add(0);
-                    }
-
-                    for (int i = 0; i < a.digits.Count; i++)
-                    {
-                        byte carry = 0;
-                        for (int j = 0; j < b.digits.Count || carry > 0; j++)
-                        {
-                            byte digitB = j < b.digits.Count ? b.digits[j] : (byte)0;
-                            int current = result[i + j] + a.digits[i] * digitB + carry;
-                            result[i + j] = (byte)(current % 10);
-                            carry = (byte)(current / 10);
-                        }
-                    }
-
-                    return new BigInteger(result);
-                }
-
-                int n = Math.Max(a.digits.Count, b.digits.Count);
-                int m = n / 2;
-
-                // Split a into high and low parts
-                List<byte> aLDigits = new List<byte>();
-                List<byte> aHDigits = new List<byte>();
-
-                for (int i = 0; i < a.digits.Count; i++)
-                {
-                    if (i < m)
-                    {
-                        aLDigits.Add(a.digits[i]);
-                    }
-                    else
-                    {
-                        aHDigits.Add(a.digits[i]);
-                    }
-                }
-
-                if (aLDigits.Count == 0) aLDigits.Add(0);
-                if (aHDigits.Count == 0) aHDigits.Add(0);
-
-                BigInteger aL = new BigInteger(aLDigits);
-                BigInteger aH = new BigInteger(aHDigits);
-
-                // Split b into high and low parts
-                List<byte> bLDigits = new List<byte>();
-                List<byte> bHDigits = new List<byte>();
-
-                for (int i = 0; i < b.digits.Count; i++)
-                {
-                    if (i < m)
-                    {
-                        bLDigits.Add(b.digits[i]);
-                    }
-                    else
-                    {
-                        bHDigits.Add(b.digits[i]);
-                    }
-                }
-
-                if (bLDigits.Count == 0) bLDigits.Add(0);
-                if (bHDigits.Count == 0) bHDigits.Add(0);
-
-                BigInteger bL = new BigInteger(bLDigits);
-                BigInteger bH = new BigInteger(bHDigits);
-
-                // Karatsuba
-                BigInteger z0 = Multiply(aL, bL);
-                BigInteger z2 = Multiply(aH, bH);
-
-                // z1 = (aLow + aHigh) * (bLow + bHigh) - z0 - z2
-                BigInteger aS = Add(aL, aH);
-                BigInteger bS = Add(bL, bH);
-                BigInteger z1 = sub(sub(Multiply(aS, bS), z0), z2);
-
-                // result = z2 * 10^(2*m) + z1 * 10^m + z0
-                BigInteger res1 = new BigInteger(ShiftLeft(z2.digits, 2 * m));
-                BigInteger res2 = new BigInteger(ShiftLeft(z1.digits, m));
-
-                return Add(Add(res1, res2), z0);
+                byte sum = (byte)(digitA + digitB + carry);//O(1)
+                result.Add((byte)(sum % 10));//O(1)
+                carry = (byte)(sum / 10);//O(1)
             }
-
-            private static List<byte> ShiftLeft(List<byte> digits, int shift)
+            if (carry > 0)//O(1)
+                result.Add(carry);//O(1)
+            return new BigInteger(result);//O(N)
+        }
+        public static BigInteger sub(BigInteger a, BigInteger b)//T(N)=N+N so it is O(N)
+        {
+            if (a < b)//O(N)
             {
-                if (digits.Count == 1 && digits[0] == 0)
-                {
-                    return new List<byte> { 0 };
-                }
-
-                List<byte> result = new List<byte>();
-
-                for (int i = 0; i < shift; i++)
-                {
-                    result.Add(0);
-                }
-
-                result.AddRange(digits);
-
-                return result;
+                Console.WriteLine("The Second Integer Is Bigger Than The First One"); //O(1) // The Requiered Class In The Task Only Supports Positive Nums
+                return new BigInteger(0);//O(log N)
             }
-            private static List<byte> sub2Lists(List<byte> a, List<byte> b)
+
+            return new BigInteger(sub2Lists(a.digits, b.digits));//T(N)=N+N so it is O(N)
+        }
+        public static BigInteger Mod(BigInteger a, BigInteger b)//O(N^1.585)
+        {
+            if (a < b)//O(N)
+                return new BigInteger(a);//O(1)
+            if (b == new BigInteger("0"))//O(N) because of the operator
             {
-                List<byte> finalRes = new List<byte>();
-                int maxLength = Math.Max(a.Count, b.Count);
-                byte borrow = 0;
-
-                for (int i = 0; i < maxLength; i++)
-                {
-                    byte digitA = i < a.Count ? a[i] : (byte)0;
-                    byte digitB = i < b.Count ? b[i] : (byte)0;
-
-                    int diff = digitA - digitB - borrow;
-                    if (diff < 0)
-                    {
-                        diff += 10;
-                        borrow = 1;
-                    }
-                    else
-                    {
-                        borrow = 0;
-                    }
-
-                    finalRes.Add((byte)diff);
-                }
-
-                return finalRes;
+                Console.WriteLine("Can Not Divide By 0           Maynf3sh :(");//O(1)
+                return new BigInteger(0);//O(1)
             }
-            public static BigInteger floor(BigInteger a, BigInteger b)
+            BigInteger temp = floor(a, b);//O(N log N)
+            BigInteger result = sub(a, Multiply(temp, b));//O(N^1.585)+O(N)= O(N^1.585)
+            return result;//O(1)
+        }
+        public static BigInteger[] Div(BigInteger a, BigInteger b)//O(N log N), Total time = time per recursive call * number of recursive calls
+        {
+            // Base case: if a is less than b, quotient is 0 and remainder is a
+            if (a < b)//O(N)
+                return new BigInteger[] { new BigInteger(0), a };//O(1)
+
+            // Calculate 2*b
+            BigInteger twoB = Add(b, b);//O(N)
+
+            // Recursive call with a and 2*b
+            BigInteger[] temp = Div(a, twoB);//T(N)=T(N/2)+O(N) =  Θ(N)
+            BigInteger q = temp[0];//O(1)
+            BigInteger r = temp[1];//O(1)
+
+            // Double the quotient (q = 2*q)
+            q = Add(q, q);//O(N)
+
+            // Check and adjust remainder and quotient if needed
+            if (r < b)//O(N)
+                return new BigInteger[] { q, r };//O(1)
+            else
+                return new BigInteger[] { Add(q, new BigInteger(1)), sub(r, b) };//O(N)
+        }
+        public static BigInteger Multiply(BigInteger a, BigInteger b)//O(N^1.585) //checked
+        {
+            // Check for zero multiplication
+            if ((a.digits.Count == 1 && a.digits[0] == 0) || (b.digits.Count == 1 && b.digits[0] == 0))//O(1)
             {
-                //BigInteger res = new BigInteger("0");
-                BigInteger[] result = Div(a, b);
-                return result[0];
-            }
-            // alm8arna
-            public int compare(BigInteger num)
-            { // 3amelha 3shan A3ml override ll Logical Operators
-                if (this.digits.Count > num.digits.Count) return 1;
-                if (this.digits.Count < num.digits.Count) return -1;
-
-                for (int i = this.digits.Count - 1; i >= 0; i--)
-                {
-                    if (this.digits[i] > num.digits[i]) return 1;
-                    if (this.digits[i] < num.digits[i]) return -1;
-                }
-                return 0;
+                return new BigInteger("0"); //O(B) where B is the big int constructor complexity
             }
 
-            //public override string ToString()
-            //{
-            //    string number = "";
-            //    for (int i = digits.Count - 1; i >= 0; i--)
-            //    {
-            //        number += (char)(digits[i] + '0');
-            //    }
-            //    return number;
-            //}
-
-
-            public static BigInteger Sqrt(BigInteger N)
+            // Simple multiplication  
+            if (a.digits.Count <= 4 || b.digits.Count <= 4)//O(1)
             {
-                if (N.digits.Count == 1 && N.digits[0] == 0)
-                    return new BigInteger("0");
-
-                if (N.digits.Count == 1 && N.digits[0] == 1)
-                    return new BigInteger("1");
-
-                BigInteger l = new BigInteger("1");
-                BigInteger h = new BigInteger(N.digits); // Copy constructor
-                BigInteger finalRes = new BigInteger("0");
-
-                while (l <= h)
+                List<byte> result = new List<byte>();//O(1)
+                for (int i = 0; i < a.digits.Count + b.digits.Count; i++)//O(N+M) for loop on a and b digits count
                 {
-                    BigInteger mid = floor(Add(l, h), new BigInteger("2"));
-                    BigInteger square = Multiply(mid, mid);
-
-                    int cmp = square == mid ? 0 : -1;
-                    if (cmp == 0)
-                        return mid;
-
-                    if (cmp < 0)
-                    {
-                        l = Add(mid, new BigInteger("1"));
-                        finalRes = mid; // Store floor value
-                    }
-                    else
-                    {
-                        h = sub(mid, new BigInteger("1"));
-                    }
+                    result.Add(0);//O(1)
                 }
 
-                return finalRes;
+                for (int i = 0; i < a.digits.Count; i++)//O(N)
+                {
+                    byte carry = 0;//O(1)
+                    for (int j = 0; j < b.digits.Count || carry > 0; j++)//O(M)
+                    {
+                        byte digitB = j < b.digits.Count ? b.digits[j] : (byte)0;//O(1)
+                        int current = result[i + j] + a.digits[i] * digitB + carry;//O(1)
+                        result[i + j] = (byte)(current % 10);//O(1)
+                        carry = (byte)(current / 10);//O(1)
+                    }
+                }//total of O(N*M)
+
+                return new BigInteger(result);//O(N)
             }
+
+            int n = Math.Max(a.digits.Count, b.digits.Count);//O(1)
+            int m = n / 2;//O(1)
+
+            // Split a into high and low parts
+            List<byte> aLDigits = new List<byte>();//O(1)
+            List<byte> aHDigits = new List<byte>();//O(1)
+
+            for (int i = 0; i < a.digits.Count; i++)//O(N)
+            {
+                if (i < m)//O(1)
+                {
+                    aLDigits.Add(a.digits[i]);//O(1)
+                }
+                else
+                {
+                    aHDigits.Add(a.digits[i]);//O(1)
+                }
+            }//total O(N)
+
+            if (aLDigits.Count == 0) aLDigits.Add(0);//O(1)
+            if (aHDigits.Count == 0) aHDigits.Add(0);//O(1)
+
+            BigInteger aL = new BigInteger(aLDigits);//O(N/2)
+            BigInteger aH = new BigInteger(aHDigits);//O(N/2) because i divide the a by half
+
+            // Split b into high and low parts
+            List<byte> bLDigits = new List<byte>();//O(1)
+            List<byte> bHDigits = new List<byte>();//O(1)
+
+            for (int i = 0; i < b.digits.Count; i++)//O(M)
+            {
+                if (i < m)//O(1)
+                {
+                    bLDigits.Add(b.digits[i]);//O(1)
+                }
+                else
+                {
+                    bHDigits.Add(b.digits[i]);//O(1)
+                }
+            }//total O(M)
+
+            if (bLDigits.Count == 0) bLDigits.Add(0);//O(1)
+            if (bHDigits.Count == 0) bHDigits.Add(0);//O(1)
+
+            BigInteger bL = new BigInteger(bLDigits);//O(M/2)
+            BigInteger bH = new BigInteger(bHDigits);//O(M/2) because i divide the b by half
+
+            // Karatsuba
+            // T(N) = 3T(N / 2) + O(N) = O(N^log2(3)) = O(N^1.585)
+            BigInteger z0 = Multiply(aL, bL);//O((N/2)^1.585)
+            BigInteger z2 = Multiply(aH, bH);//O((N/2)^1.585)
+
+            // z1 = (aLow + aHigh) * (bLow + bHigh) - z0 - z2
+            BigInteger aS = Add(aL, aH);//O(N)
+            BigInteger bS = Add(bL, bH);//O(N)
+            BigInteger z1 = sub(sub(Multiply(aS, bS), z0), z2);//O(N^1.585)+O(N)+O(N) = O(N^1.585)
+
+            // result = z2 * 10^(2*m) + z1 * 10^m + z0
+            BigInteger res1 = new BigInteger(ShiftLeft(z2.digits, 2 * m));//O(N)
+            BigInteger res2 = new BigInteger(ShiftLeft(z1.digits, m));//O(N)
+
+            return Add(Add(res1, res2), z0);//O(N)
+        }
+
+        private static List<byte> ShiftLeft(List<byte> digits, int shift) //O(N) T(N)=S+M //checked
+        {
+            if (digits.Count == 1 && digits[0] == 0)//O(1)
+            {
+                return new List<byte> { 0 };//O(1)
+            }
+
+            List<byte> result = new List<byte>();//O(1)
+
+            for (int i = 0; i < shift; i++)//O(S)
+            {
+                result.Add(0);//O(1)
+            }
+
+            result.AddRange(digits);//O(M) where M equals number of elements in the collection
+
+            return result;//O(1)
+        }
+        private static List<byte> sub2Lists(List<byte> a, List<byte> b)//O(N) //checked
+        {
+            List<byte> finalRes = new List<byte>();//O(1)
+            int maxLength = Math.Max(a.Count, b.Count);//O(1)
+            byte borrow = 0;//O(1)
+
+            for (int i = 0; i < maxLength; i++)//O(N)
+            {
+                byte digitA = i < a.Count ? a[i] : (byte)0;//O(1)
+                byte digitB = i < b.Count ? b[i] : (byte)0;//O(1)
+
+                int diff = digitA - digitB - borrow;//O(1)
+                if (diff < 0)//O(1)
+                {
+                    diff += 10;//O(1)
+                    borrow = 1;//O(1)
+                }
+                else
+                {
+                    borrow = 0;//O(1)
+                }
+
+                finalRes.Add((byte)diff);//O(1)
+            }
+
+            return finalRes;//O(1)
+        }
+        public static BigInteger floor(BigInteger a, BigInteger b)//O(N log N)
+        {
+            //BigInteger res = new BigInteger("0");
+            BigInteger[] result = Div(a, b);//O(N log N)
+            return result[0];//O(1)
+        }
+        // alm8arna
+        public int compare(BigInteger num)//O(N) total complexity
+        { // 3amelha 3shan A3ml override ll Logical Operators
+            if (this.digits.Count > num.digits.Count) return 1;//O(1)
+            if (this.digits.Count < num.digits.Count) return -1;//O(1)
+
+            for (int i = this.digits.Count - 1; i >= 0; i--) //O(N) N=digits.count
+            {
+                if (this.digits[i] > num.digits[i]) return 1;//O(1)
+                if (this.digits[i] < num.digits[i]) return -1;//O(1)
+            }
+            return 0;//O(1)
+        }
+
+        //public override string ToString()
+        //{
+        //    string number = "";
+        //    for (int i = digits.Count - 1; i >= 0; i--)
+        //    {
+        //        number += (char)(digits[i] + '0');
+        //    }
+        //    return number;
+        //}
+
+
+        public static BigInteger Sqrt(BigInteger N)//O(log(N)*N ^ 1.585) //checked
+        {
+            if (N.digits.Count == 1 && N.digits[0] == 0)//O(1)
+                return new BigInteger("0");//O(1)
+
+            if (N.digits.Count == 1 && N.digits[0] == 1)//O(1)
+                return new BigInteger("1");//O(1)
+
+            BigInteger l = new BigInteger("1");//O(1)
+            BigInteger h = new BigInteger(N.digits); //O(N)// Copy constructor
+            BigInteger finalRes = new BigInteger("0");//O(1)
+
+            while (l <= h)//O(log N)
+            {
+                BigInteger mid = floor(Add(l, h), new BigInteger("2"));//O(N log N)+ O(N)+ O(N)= O(N log N)
+                BigInteger square = Multiply(mid, mid);//O(N^1.585)
+
+                int cmp = square == mid ? 0 : -1;//O(N) operator is big integer
+                if (cmp == 0)//O(1)
+                    return mid;//O(1)
+
+                if (cmp < 0)//O(1)
+                {
+                    l = Add(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
+                    finalRes = mid;//O(1) // Store floor value
+                }
+                else
+                {
+                    h = sub(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
+                }
+            }//total complexity is O(log(N)*N ^ 1.585)
+
+            return finalRes;//O(1)
+        }
     }
 }
