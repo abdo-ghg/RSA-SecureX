@@ -18,8 +18,8 @@ namespace RSA_SecureX
         // read the file from the pc 
         public static bool ReadFileFrompc()
         {
-            Console.WriteLine("Choose a .txt file:");
-            Console.WriteLine("Press any key to open the file dialog...");
+            Console.WriteLine("Choose a .txt file:");//O(1)
+            Console.WriteLine("Press any key to open the file dialog...");//O(1)
             Console.ReadKey();
 
             string selectedFilePath = OpenFile();
@@ -32,14 +32,14 @@ namespace RSA_SecureX
 
             if (Path.GetExtension(selectedFilePath).Equals(".txt", StringComparison.OrdinalIgnoreCase) && File.Exists(selectedFilePath))
             {
-                filePath = selectedFilePath;
-                Console.WriteLine($"Selected file: {filePath}");
-                return true;
+                filePath = selectedFilePath;//O(1)
+                Console.WriteLine($"Selected file: {filePath}");//O(1)
+                return true;//O(1)
             }
             else
             {
-                Console.WriteLine("Invalid file! Must be a .txt file that exists.");
-                return false;
+                Console.WriteLine("Invalid file! Must be a .txt file that exists.");//O(1)
+                return false;//O(1)
             }
         }
 
@@ -89,7 +89,7 @@ namespace RSA_SecureX
         // read the file
         public static bool ReadFile()
         {
-            int choice;
+            int choice;//O(1)
             do
             {
                 Console.WriteLine("\nChoose an option:");
