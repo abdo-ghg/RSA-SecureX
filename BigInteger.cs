@@ -190,6 +190,9 @@ namespace RSA_SecureX
             BigInteger[] result = Div(a, b);//O(N log N)
             return result[1];//O(1)
         }
+
+
+
         public static BigInteger[] Div(BigInteger a, BigInteger b)//O(N log N), Total time = time per recursive call * number of recursive calls
         {
             // Base case: if a is less than b, quotient is 0 and remainder is a
@@ -403,10 +406,10 @@ namespace RSA_SecureX
                 BigInteger mid = floor(Add(l, h), new BigInteger("2"));//O(N log N)+ O(N)+ O(N)= O(N log N)
                 BigInteger square = Multiply(mid, mid);//O(N^1.585)
 
-                if (square == N)//O(1)
+                if (square == N)//O(N)
                     return mid;//O(1)
 
-                if (square < N)//O(1)
+                if (square < N)//O(N)
                 {
                     l = Add(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
                     finalRes = mid;//O(1) // Store floor value

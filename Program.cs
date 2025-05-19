@@ -26,15 +26,20 @@ namespace RSA_SecureX
             // Test 5: Modulo
             BigInteger p = GenerateKeys.GenerateLargePrime(digits);
             BigInteger q = GenerateKeys.GenerateLargePrime(digits);
-            Console.WriteLine("p: " + p);
-            Console.WriteLine("q: " + q);
+            //Console.WriteLine("p: " + p);
+            //Console.WriteLine("q: " + q);
 
             //BigInteger t = BigInteger.Mod(num1, num2);
             BigInteger e, d, n;
             GenerateKeys.GenerateKey(p, q, out n, out e, out d);
+            Console.WriteLine("Public Key: N " + n + "e " + e);
+            Console.WriteLine("Private Key: N " + n + "d " + d);
 
-            BigInteger encrypted = Cryptosystem.StringToBigInteger(original);
-            string decrypted = Cryptosystem.BigIntegerToString(encrypted);
+            BigInteger message = string_op.StringToBigInteger(original);
+            Console.WriteLine("Message: " + message);
+            BigInteger cipher = Cryptosystem.encrypt(e,n,message);
+            BigInteger decrypt = Cryptosystem.decrypt(d, n, cipher);
+            string decrypted = string_op.BigIntegerToString(decrypt);
 
             Console.WriteLine("Original : " + original);
             Console.WriteLine("Decrypted: " + decrypted);

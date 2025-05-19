@@ -43,51 +43,17 @@ namespace RSA_SecureX
         }
 
 
-        public static BigInteger encrypt(BigInteger e, BigInteger n, BigInteger message)//O(log n * N^1.585)
+        public static BigInteger encrypt(BigInteger e, BigInteger n, BigInteger message)//O(log n * N^1.585)  M^e mod n
         {
             return ExpMod(message, e, n);// O(log n * N^1.585)
         }
 
 
-        public static BigInteger decrypt(BigInteger d, BigInteger n, BigInteger cipher)// O(log n * N^1.585)
+        public static BigInteger decrypt(BigInteger d, BigInteger n, BigInteger cipher)// O(log n * N^1.585) C^d mod n
         {
             return ExpMod(cipher, d, n);// O(log n * N^1.585)
         }
 
-
-        // Encrypt a string using RSA
-        //public static List<BigInteger> EncryptString(string message, BigInteger e, BigInteger n)
-        //{
-        //    byte[] data = Encoding.UTF8.GetBytes(message);
-        //    int blockSize = GetMaxBlockSize(n); // bytes per block
-        //    List<BigInteger> encryptedBlocks = new List<BigInteger>();
-
-        //    for (int i = 0; i < data.Length; i += blockSize)
-        //    {
-        //        int len = Math.Min(blockSize, data.Length - i);
-        //        byte[] block = new byte[len];
-        //        Array.Copy(data, i, block, 0, len);
-
-        //        BigInteger plain = BigInteger.BytesToBigInteger(block);
-        //        BigInteger cipher = encrypt(e, n, plain);
-        //        encryptedBlocks.Add(cipher);
-        //    }
-
-        //    return encryptedBlocks;
-        //}
-
-        //// Decrypt a list of BigIntegers back into string
-        //public static string DecryptToString(List<BigInteger> encrypted, BigInteger d, BigInteger n)
-        //{
-        //    List<byte> resultBytes = new List<byte>();
-        //    foreach (BigInteger cipher in encrypted)
-        //    {
-        //        BigInteger plain = decrypt(d, n, cipher);
-        //        byte[] bytes = BigInteger.BigIntegerToBytes(plain);
-        //        resultBytes.AddRange(bytes);
-        //    }
-        //    return Encoding.UTF8.GetString(resultBytes.ToArray());
-        //}
 
         // Returns max number of bytes per block such that base-256 number < n
         public static int GetMaxBlockSize(BigInteger n)
@@ -102,73 +68,6 @@ namespace RSA_SecureX
             return count - 1; // ensure result < n
         }
 
-
-        public static BigInteger StringToBigInteger(string message)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(message);
-            BigInteger result = new BigInteger(0);
-            BigInteger base256 = new BigInteger(256);
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                result = BigInteger.Add(BigInteger.Multiply(result, base256) , new BigInteger((int)bytes[i]));
-            }
-
-            return result;
-        }
-
-        public static string BigIntegerToString(BigInteger number)
-        {
-            List<byte> bytes = new List<byte>();
-            BigInteger base256 = new BigInteger(256);
-
-            while (number > new BigInteger(0))
-            {
-                BigInteger[] divmod = BigInteger.Div(number,base256);
-                number = divmod[0];
-                bytes.Add((byte)divmod[1].ToInt());
-            }
-
-            // Bytes are in little-endian, reverse before UTF8 decoding
-            bytes.Reverse();
-
-            return Encoding.UTF8.GetString(bytes.ToArray());
-        }
-
-
-        // Encrypt a string using RSA
-        public static List<BigInteger> EncryptString(string message, BigInteger e, BigInteger n)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(message);
-            int blockSize = GetMaxBlockSize(n); // bytes per block
-            List<BigInteger> encryptedBlocks = new List<BigInteger>();
-
-            for (int i = 0; i < data.Length; i += blockSize)
-            {
-                int len = Math.Min(blockSize, data.Length - i);
-                byte[] block = new byte[len];
-                Array.Copy(data, i, block, 0, len);
-
-                BigInteger plain = BigInteger.BytesToBigInteger(block);
-                BigInteger cipher = encrypt(e, n, plain);
-                encryptedBlocks.Add(cipher);
-            }
-
-            return encryptedBlocks;
-        }
-
-        // Decrypt a list of BigIntegers back into string
-        public static string DecryptToString(List<BigInteger> encrypted, BigInteger d, BigInteger n)
-        {
-            List<byte> resultBytes = new List<byte>();
-            foreach (BigInteger cipher in encrypted)
-            {
-                BigInteger plain = decrypt(d, n, cipher);
-                byte[] bytes = BigInteger.BigIntegerToBytes(plain);
-                resultBytes.AddRange(bytes);
-            }
-            return Encoding.UTF8.GetString(resultBytes.ToArray());
-        }
 
 
         public static void TheCases(string[] lines)//O(L*N) //checked

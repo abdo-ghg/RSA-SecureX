@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace RSA_SecureX
 {
@@ -90,22 +91,6 @@ namespace RSA_SecureX
 
         }
 
-        // Prime numbers generate 
-        //public static BigInteger GenerateLargePrime(int digits)///////////////////////////////////////////////////////////////////////////
-        //{
-        //    Random rand = new Random();//O(1)
-        //    BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));//O(log digits)
-        //    BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);//O(log digits)
-
-        //    BigInteger candidate = new BigInteger();//O(1)
-
-        //    do
-        //    {
-        //        candidate = rand.NextLong(min, max);//O(N^1.585)
-        //    } while (!IsPrime(candidate));//O(sqrt(N) * N^1.585)
-
-        //    return candidate;//O(1)
-        //}
 
 
         public static BigInteger GenerateLargePrime(int digits)
@@ -132,7 +117,7 @@ namespace RSA_SecureX
 
             if (number < two) return false;//O(N)
             if (number == two || number == three) return true;//O(N)
-            if (BigInteger.Mod(number, two) == zero) return false; //O(N ^ 1.585) Even
+            if (BigInteger.Check(number) == "Even") return false; //O(N ^ 1.585) Even
 
             BigInteger boundary = BigInteger.Sqrt(number);//O(log(N) * N^1.585)
 
