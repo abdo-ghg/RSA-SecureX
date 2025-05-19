@@ -111,9 +111,9 @@ namespace RSA_SecureX
 
         static bool IsPrime(BigInteger number)//O(sqrt(N) * N^1.585) //checked
         {
-            BigInteger two = new BigInteger(2);//O(1)
-            BigInteger three = new BigInteger(3);//O(1)
-            BigInteger zero = new BigInteger(0);//O(1)
+            BigInteger two = new BigInteger(2);//O(log N)
+            BigInteger three = new BigInteger(3);//O(log N)
+            BigInteger zero = new BigInteger(0);//O(log N)
 
             if (number < two) return false;//O(N)
             if (number == two || number == three) return true;//O(N)
@@ -121,7 +121,7 @@ namespace RSA_SecureX
 
             BigInteger boundary = BigInteger.Sqrt(number);//O(log(N) * N^1.585)
 
-            BigInteger i = new BigInteger(3);//O(1)
+            BigInteger i = new BigInteger(3);//O(log N)
 
             for (; i <= boundary; i = BigInteger.Add(i, two))// (sqrt(N) - 1)/2
             {
@@ -140,7 +140,7 @@ namespace RSA_SecureX
             byte[] buffer = new byte[8];//O(1)
             rand.NextBytes(buffer);//O(N)
             BigInteger longRand = new BigInteger(BitConverter.ToInt32(buffer, 0) & 0x7FFFFFFF);//O(log N) // Ensure positive
-            BigInteger one = new BigInteger(1);//O(1)
+            BigInteger one = new BigInteger(1);//O(log N)
 
             return BigInteger.Add
                 (BigInteger.Mod(longRand, BigInteger.Add

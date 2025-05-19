@@ -28,7 +28,7 @@ namespace RSA_SecureX
         }
         public static BigInteger operator >>(BigInteger a, int shift)//O(S* N log N) //checked
         {
-            BigInteger result = new BigInteger(a);//O(1)
+            BigInteger result = new BigInteger(a);//O(N)
 
             for (int i = 0; i < shift; i++)//O(S)
             {
@@ -39,7 +39,7 @@ namespace RSA_SecureX
         }
         public static BigInteger operator <<(BigInteger a, int shift)//O(S* N^1.585) //checked
         {
-            BigInteger result = new BigInteger(a);//O(1)
+            BigInteger result = new BigInteger(a);//O(N)
 
             for (int i = 0; i < shift; i++)//O(S)
             {
@@ -54,15 +54,15 @@ namespace RSA_SecureX
         {
             digits = new List<byte>() { 0 };//O(1)
         }
-        public BigInteger(BigInteger a)//O(1)
+        public BigInteger(BigInteger a)//O(N) // because i have to copy the reference into a new list
         {
-            digits = a.digits;//O(1)
+            digits = a.digits;//O(N)
         }
         public BigInteger(string number)//T(N)=N+N then it is O(N) //checked
         {
 
             digits = new List<byte>();//O(1)
-            foreach (char c in number.Reverse())//O(N) //reverse is O(1)
+            foreach (char c in number.Reverse())//O(N) 
             {
 
                 digits.Add((byte)(c - '0'));//O(1)
@@ -109,48 +109,48 @@ namespace RSA_SecureX
         }
 
         // Convert a byte array to a BigInteger (base 256)
-        public static BigInteger BytesToBigInteger(byte[] bytes)
+        public static BigInteger BytesToBigInteger(byte[] bytes)//O(L*N^1.585)
         {
-            BigInteger result = new BigInteger(0);
-            BigInteger base256 = new BigInteger(256);
-            for (int i = bytes.Length - 1; i >= 0; i--) // Big-endian to little-endian logic
+            BigInteger result = new BigInteger(0);//O(1)
+            BigInteger base256 = new BigInteger(256);//O(log N)
+            for (int i = bytes.Length - 1; i >= 0; i--) //O(length)// Big-endian to little-endian logic
             {
-                result = Add(Multiply(result, base256), new BigInteger((int)bytes[i]));
+                result = Add(Multiply(result, base256), new BigInteger((int)bytes[i]));//O(log N)+O(N^1.585)+O(N)=O(N^1.585)
             }
-            return result;
+            return result;//O(1)
         }
 
         // Convert a BigInteger back to bytes (base 256)
-        public static byte[] BigIntegerToBytes(BigInteger number)
+        public static byte[] BigIntegerToBytes(BigInteger number)//O(N^2 log N)
         {
-            List<byte> bytes = new List<byte>();
-            BigInteger base256 = new BigInteger(256);
+            List<byte> bytes = new List<byte>();//O(1)
+            BigInteger base256 = new BigInteger(256);//O(log N)
 
-            while (number > new BigInteger(0))
+            while (number > new BigInteger(0))//O(N)
             {
-                BigInteger[] divmod = Div(number,base256);
-                number = divmod[0];
-                bytes.Add((byte)divmod[1].ToInt());
+                BigInteger[] divmod = Div(number,base256);//O(N log N)
+                number = divmod[0];//O(1)
+                bytes.Add((byte)divmod[1].ToInt());//O(N)
             }
 
             // Reverse to get the correct order for UTF-8
-            bytes.Reverse();
-            return bytes.ToArray();
+            bytes.Reverse();//O(N)
+            return bytes.ToArray();//O(N)
         }
 
 
-        public int ToInt()
+        public int ToInt()//O(N)
         {
-            int result = 0;
-            int multiplier = 1;
+            int result = 0;//O(1)
+            int multiplier = 1;//O(1)
 
-            foreach (byte digit in digits)
+            foreach (byte digit in digits)//O(N)
             {
-                result += digit * multiplier;
-                multiplier *= 10;
+                result += digit * multiplier;//O(1)
+                multiplier *= 10;//O(1)
             }
 
-            return result;
+            return result;//O(1)
         }
 
 
@@ -219,7 +219,7 @@ namespace RSA_SecureX
         public static BigInteger floor(BigInteger a, BigInteger b) //O(N log N)
         {
             BigInteger[] result = Div(a, b);  //O(N log N)
-            return result[0];
+            return result[0];//O(1)
         }
         public static BigInteger Multiply(BigInteger a, BigInteger b)//O(N^1.585) //checked
         {
@@ -380,26 +380,26 @@ namespace RSA_SecureX
             BigInteger x = Mod(a, c); //O(N log N)
             return (x == new BigInteger(0)) ? "Even" : "Odd"; // O(N) + O(log N)
         }
-        public override string ToString()
+        public override string ToString()//O(N^2)
         {
-            string number = "";
-            for (int i = digits.Count - 1; i >= 0; i--)
+            string number = "";//O(1)
+            for (int i = digits.Count - 1; i >= 0; i--)//O(N)
             {
-                number += (char)(digits[i] + '0');
+                number += (char)(digits[i] + '0');//O(N)
             }
-            return number;
+            return number;//O(1)
         }
         public static BigInteger Sqrt(BigInteger N)//O(log(N) * N^1.585) //checked
         {
             if (N.digits.Count == 1 && N.digits[0] == 0)//O(1)
-                return new BigInteger("0");//O(1)
+                return new BigInteger("0");//O(N)
 
             if (N.digits.Count == 1 && N.digits[0] == 1)//O(1)
-                return new BigInteger("1");//O(1)
+                return new BigInteger("1");//O(N)
 
-            BigInteger l = new BigInteger("1");//O(1)
+            BigInteger l = new BigInteger("1");//O(N)
             BigInteger h = new BigInteger(N.digits); //O(N)// Copy constructor
-            BigInteger finalRes = new BigInteger("0");//O(1)
+            BigInteger finalRes = new BigInteger("0");//O(N)
 
             while (l <= h)//O(log N)
             {
@@ -411,12 +411,12 @@ namespace RSA_SecureX
 
                 if (square < N)//O(N)
                 {
-                    l = Add(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
+                    l = Add(mid, new BigInteger("1"));//O(N)+O(N)= O(N)
                     finalRes = mid;//O(1) // Store floor value
                 }
                 else
                 {
-                    h = sub(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
+                    h = sub(mid, new BigInteger("1"));//O(N)+O(N)= O(N)
                 }
             }//total complexity is O(log(N)*N ^ 1.585)
 

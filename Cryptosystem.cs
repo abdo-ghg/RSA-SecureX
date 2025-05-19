@@ -22,7 +22,7 @@ namespace RSA_SecureX
 
         public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)//total of O(log n * N^1.585)
         {
-            BigInteger result = new BigInteger(1);//O(1)
+            BigInteger result = new BigInteger(1);//O(log N)
             k = BigInteger.Mod(k, m);//O(N^1.585)   
             BigInteger zero = new BigInteger(0);//O(1)
             BigInteger one = new BigInteger(1);//O(log N)
