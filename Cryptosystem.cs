@@ -23,7 +23,7 @@ namespace RSA_SecureX
         public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)//total of O(log n * N^1.585)
         {
             BigInteger result = new BigInteger(1);//O(log N)
-            k = BigInteger.Mod(k, m);//O(N^1.585)   
+            k = BigInteger.Mod(k, m);//O(N log N)   
             BigInteger zero = new BigInteger(0);//O(1)
             BigInteger one = new BigInteger(1);//O(log N)
 
@@ -31,13 +31,13 @@ namespace RSA_SecureX
             {
                 if ((n & one) == one)//O(N)
                 {
-                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)    
+                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N log N)+O(N^1.58) = O(N^1.585)    
                 }
 
                 n = n >> 1; //O(S* N log N)//divide by 2
 
                 //Pow
-                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)   k^2 mod m
+                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N log N)+O(N^1.58) = O(N^1.585)   k^2 mod m
             }//total of O(log n * N^1.585)
             return result;//O(1)
         }
@@ -56,16 +56,16 @@ namespace RSA_SecureX
 
 
         // Returns max number of bytes per block such that base-256 number < n
-        public static int GetMaxBlockSize(BigInteger n)
+        public static int GetMaxBlockSize(BigInteger n)//O(log N* N^1.585) //checked
         {
-            BigInteger test = new BigInteger(1);
-            int count = 0;
-            while (test < n)
+            BigInteger test = new BigInteger(1);//O(log N)
+            int count = 0;//O(1)
+            while (test < n)//O(log N base 256)
             {
-                test = BigInteger.Multiply(test, new BigInteger(256));
-                count++;
+                test = BigInteger.Multiply(test, new BigInteger(256));//O(N^1.585)+O(log N) = O(N^1.585)
+                count++;//O(1)
             }
-            return count - 1; // ensure result < n
+            return count - 1; //O(1)// ensure result < n
         }
 
 

@@ -11,12 +11,12 @@ namespace RSA_SecureX
     {
         // O(log(min(a,b))) Complexity
         // Function to calculate GCD using Euclidean algorithm 
-        static BigInteger gcd(BigInteger a, BigInteger b)//O(N^1.585 * log(min(a,b)))
+        static BigInteger gcd(BigInteger a, BigInteger b)//O(N log N * log(min(a,b)))
         {
             while (b != new BigInteger("0"))//O(log(min(a,b))) euclidean algorithm
             {
                 BigInteger temp = b;//O(1)
-                b = BigInteger.Mod(a, b);//O(N^1.585)  b = a % b
+                b = BigInteger.Mod(a, b);//O(N log N)  b = a % b
                 a = temp;//O(1)
             }
 
@@ -24,7 +24,7 @@ namespace RSA_SecureX
         }
 
         // O(phi*log(phi))  msh mota2kd
-        public static void GenerateKey(BigInteger p, BigInteger q, out BigInteger n, out BigInteger e, out BigInteger d)//O(log(min(e,phi)) * N^1.585 *phi) ????????????????????????????????????????????????????????????
+        public static void GenerateKey(BigInteger p, BigInteger q, out BigInteger n, out BigInteger e, out BigInteger d)//O(log(min(e,phi)) * N^1.585 *phi)
         {
             int startTime = Environment.TickCount;//O(1)
 
@@ -44,18 +44,18 @@ namespace RSA_SecureX
 
             //e = 65537;
             //e = 3; // Start with a small odd integer
-            e = new BigInteger("3");//O(1)
+            e = new BigInteger("3");//O(N)
 
             startTime = Environment.TickCount;//O(1)
 
             while (e < phi)//O(phi)
             {
-                if (gcd(e, phi) == new BigInteger("1"))//O(log(min(e,phi)) * N^1.585)
+                if (gcd(e, phi) == new BigInteger("1"))//O(log(min(e,phi)) * N log N)
                 {
                     break;
                 }
-                e = BigInteger.Add(e, new BigInteger("1"));//O(1)
-            }
+                e = BigInteger.Add(e, new BigInteger("1"));//O(N)
+            }//total while loop O(phi * log(min(e,phi)) * N log N)
 
             // 2. Get end time
             endTime = Environment.TickCount;//O(1)
@@ -66,7 +66,7 @@ namespace RSA_SecureX
             Console.WriteLine("Execution time for gcd while loop: " + duration + " ms");//O(1)
 
             //d = 0;
-            d = new BigInteger("0");//O(1)
+            d = new BigInteger("0");//O(N)
 
             startTime = Environment.TickCount;//O(1)
 
@@ -74,12 +74,12 @@ namespace RSA_SecureX
             {
 
                 // e *i mod phi = 1
-                if (BigInteger.Mod(BigInteger.Multiply(e, i), phi) == new BigInteger("1"))// O(N^1.585 + N^1.585) = O(N^1.585) per iteration
+                if (BigInteger.Mod(BigInteger.Multiply(e, i), phi) == new BigInteger("1"))// O(N log N + N^1.585) = O(N^1.585) per iteration
                 {
                     d = i;//O(1)
                     break;
                 }
-            }
+            }//total for loop O(phi * N^1.585)
 
             // 2. Get end time
             endTime = Environment.TickCount;//O(1)
@@ -93,20 +93,20 @@ namespace RSA_SecureX
 
 
 
-        public static BigInteger GenerateLargePrime(int digits)
+        public static BigInteger GenerateLargePrime(int digits)//O(sqrt(N) * N^2)
         {
             Random rand = new Random();
-            BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));
-            BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);
+            BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));//O(log N)
+            BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);//O(log N)
 
-            BigInteger candidate = new BigInteger();
+            BigInteger candidate = new BigInteger();//O(1)
 
             do
             {
-                candidate = rand.NextLong(min, max);
-            } while (!IsPrime(candidate));
+                candidate = rand.NextLong(min, max);//O(N^1.585)
+            } while (!IsPrime(candidate));//O(sqrt(N) * N^1.585)
 
-            return candidate;
+            return candidate;//O(1)
         }
 
         static bool IsPrime(BigInteger number)//O(sqrt(N) * N^1.585) //checked
@@ -125,9 +125,9 @@ namespace RSA_SecureX
 
             for (; i <= boundary; i = BigInteger.Add(i, two))// (sqrt(N) - 1)/2
             {
-                if (BigInteger.Mod(number, i) == zero)//O(N^1.585)
+                if (BigInteger.Mod(number, i) == zero)//O(N log N)
                     return false;//O(1)
-            }
+            }//total for loop O(sqrt(N) * N log N)
 
             return true;//O(1)
         }
@@ -145,7 +145,7 @@ namespace RSA_SecureX
             return BigInteger.Add
                 (BigInteger.Mod(longRand, BigInteger.Add
                 (BigInteger.sub
-                (maxValue, minValue), one)), minValue); //O(N)+O(N)+O(N)+O(N^1.585)=O(N^1.585) //The Same As return (longRand % (maxValue - minValue + 1)) + minValue;
+                (maxValue, minValue), one)), minValue); //O(N)+O(N)+O(N log N)+O(N^1.585)=O(N^1.585) //The Same As return (longRand % (maxValue - minValue + 1)) + minValue;
 
         }
     }
