@@ -125,15 +125,19 @@ namespace RSA_SecureX
         {
             List<byte> bytes = new List<byte>();
             BigInteger base256 = new BigInteger(256);
+
             while (number > new BigInteger(0))
             {
-                BigInteger[] divmod = Div(number,base256); // returns [quotient, remainder] Div
+                BigInteger[] divmod = Div(number,base256);
                 number = divmod[0];
-                bytes.Add((byte)divmod[1].ToInt()); // assuming you have ToInt() or similar
+                bytes.Add((byte)divmod[1].ToInt());
             }
-            bytes.Reverse(); // Convert to big-endian for UTF-8 decoding
+
+            // Reverse to get the correct order for UTF-8
+            bytes.Reverse();
             return bytes.ToArray();
         }
+
 
         public int ToInt()
         {

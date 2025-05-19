@@ -33,9 +33,9 @@ namespace RSA_SecureX
             BigInteger e, d, n;
             GenerateKeys.GenerateKey(p, q, out n, out e, out d);
 
-            var encrypted = Cryptosystem.EncryptString(original, e, n);
-            string decrypted = Cryptosystem.DecryptToString(encrypted, d, n);
-            
+            BigInteger encrypted = Cryptosystem.StringToBigInteger(original);
+            string decrypted = Cryptosystem.BigIntegerToString(encrypted);
+
             Console.WriteLine("Original : " + original);
             Console.WriteLine("Decrypted: " + decrypted);
 
