@@ -103,6 +103,43 @@ namespace RSA_SecureX
         }
 
 
+
+
+        // Encrypt a string using RSA
+        public static List<BigInteger> EncryptString(string message, BigInteger e, BigInteger n)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+            int blockSize = GetMaxBlockSize(n); // bytes per block
+            List<BigInteger> encryptedBlocks = new List<BigInteger>();
+
+            for (int i = 0; i < data.Length; i += blockSize)
+            {
+                int len = Math.Min(blockSize, data.Length - i);
+                byte[] block = new byte[len];
+                Array.Copy(data, i, block, 0, len);
+
+                BigInteger plain = BigInteger.BytesToBigInteger(block);
+                BigInteger cipher = encrypt(e, n, plain);
+                encryptedBlocks.Add(cipher);
+            }
+
+            return encryptedBlocks;
+        }
+
+        // Decrypt a list of BigIntegers back into string
+        public static string DecryptToString(List<BigInteger> encrypted, BigInteger d, BigInteger n)
+        {
+            List<byte> resultBytes = new List<byte>();
+            foreach (BigInteger cipher in encrypted)
+            {
+                BigInteger plain = decrypt(d, n, cipher);
+                byte[] bytes = BigInteger.BigIntegerToBytes(plain);
+                resultBytes.AddRange(bytes);
+            }
+            return Encoding.UTF8.GetString(resultBytes.ToArray());
+        }
+
+
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
             testCases.Clear();//O(N)

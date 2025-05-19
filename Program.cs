@@ -11,6 +11,7 @@ namespace RSA_SecureX
         [STAThread]
         static void Main(string[] args)
         {
+            int startTime5 = Environment.TickCount;
             //Cryptosystem.CryptoTheMassege();
             //ManagerFiles.ChooseTheWay();
 
@@ -32,9 +33,11 @@ namespace RSA_SecureX
             BigInteger e, d, n;
             GenerateKeys.GenerateKey(p, q, out n, out e, out d);
 
-            int startTime5 = Environment.TickCount;
-            //var encrypted = Cryptosystem.EncryptString(original, e, n);
-            //string decrypted = Cryptosystem.DecryptToString(encrypted, d, n);
+            var encrypted = Cryptosystem.EncryptString(original, e, n);
+            string decrypted = Cryptosystem.DecryptToString(encrypted, d, n);
+            
+            Console.WriteLine("Original : " + original);
+            Console.WriteLine("Decrypted: " + decrypted);
 
             int endtim5 = Environment.TickCount;
             Console.WriteLine("Execution time for modulo: " + (endtim5 - startTime5) + " ms");

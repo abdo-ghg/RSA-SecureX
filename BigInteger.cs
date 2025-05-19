@@ -108,6 +108,48 @@ namespace RSA_SecureX
             }
         }
 
+        // Convert a byte array to a BigInteger (base 256)
+        public static BigInteger BytesToBigInteger(byte[] bytes)
+        {
+            BigInteger result = new BigInteger(0);
+            BigInteger base256 = new BigInteger(256);
+            for (int i = bytes.Length - 1; i >= 0; i--) // Big-endian to little-endian logic
+            {
+                result = Add(Multiply(result, base256), new BigInteger((int)bytes[i]));
+            }
+            return result;
+        }
+
+        // Convert a BigInteger back to bytes (base 256)
+        public static byte[] BigIntegerToBytes(BigInteger number)
+        {
+            List<byte> bytes = new List<byte>();
+            BigInteger base256 = new BigInteger(256);
+            while (number > new BigInteger(0))
+            {
+                BigInteger[] divmod = Div(number,base256); // returns [quotient, remainder] Div
+                number = divmod[0];
+                bytes.Add((byte)divmod[1].ToInt()); // assuming you have ToInt() or similar
+            }
+            bytes.Reverse(); // Convert to big-endian for UTF-8 decoding
+            return bytes.ToArray();
+        }
+
+        public int ToInt()
+        {
+            int result = 0;
+            int multiplier = 1;
+
+            foreach (byte digit in digits)
+            {
+                result += digit * multiplier;
+                multiplier *= 10;
+            }
+
+            return result;
+        }
+
+
         // 3shan a3ml override l operators zy + , - , * , /
         public static BigInteger Add(BigInteger firstNum, BigInteger secondNum)//T(N)=N+N so it is O(N) //checked
         {
