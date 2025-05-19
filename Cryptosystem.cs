@@ -53,6 +53,7 @@ namespace RSA_SecureX
         {
             return ExpMod(cipher, d, n);// O(log n * N^1.585)
         }
+<<<<<<< Updated upstream
 
 
         // Returns max number of bytes per block such that base-256 number < n
@@ -70,9 +71,10 @@ namespace RSA_SecureX
 
 
 
+=======
+>>>>>>> Stashed changes
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
-            testCases.Clear();//O(N)
             int j = 0;//O(1)
 
             while (j + 3 < lines.Length)//L/4 = O(L)
@@ -91,10 +93,6 @@ namespace RSA_SecureX
 
         public static void CryptoTheMassege()
         {
-            result.Clear();//O(N)
-            time.Clear();//O(N)
-            theResults.Clear();//O(N)
-
             bool fileSelected = false;//O(1)
             while (!fileSelected)
             {
@@ -102,7 +100,7 @@ namespace RSA_SecureX
 
                 if (string.IsNullOrEmpty(ManagerFiles.filePath))
                 {
-                    Console.WriteLine("No file was selected. Please try again or press Ctrl+C to exit.");
+                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
                     continue;
                 }
 

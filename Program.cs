@@ -11,12 +11,13 @@ namespace RSA_SecureX
         [STAThread]
         static void Main(string[] args)
         {
-            int startTime5 = Environment.TickCount;
-            //Cryptosystem.CryptoTheMassege();
-            //ManagerFiles.ChooseTheWay();
+            //int startTime5 = Environment.TickCount;
 
-            string original = "Hello Sir George!";
-            int digits = 4;
+            Cryptosystem.CryptoTheMassege();
+            // ManagerFiles.ChooseTheWay();
+            Cryptosystem.DisplayAllTestInformation();
+            //string original = "Hello Sir George!";
+            //int digits = 4;
 
             //string n1 = "5886655887";
             //string n2 = "147999999999";
@@ -24,28 +25,28 @@ namespace RSA_SecureX
             //BigInteger num2 = new BigInteger("5");
 
             // Test 5: Modulo
-            BigInteger p = GenerateKeys.GenerateLargePrime(digits);
-            BigInteger q = GenerateKeys.GenerateLargePrime(digits);
+            //BigInteger p = GenerateKeys.GenerateLargePrime(digits);
+            //BigInteger q = GenerateKeys.GenerateLargePrime(digits);
             //Console.WriteLine("p: " + p);
             //Console.WriteLine("q: " + q);
 
             //BigInteger t = BigInteger.Mod(num1, num2);
-            BigInteger e, d, n;
-            GenerateKeys.GenerateKey(p, q, out n, out e, out d);
-            Console.WriteLine("Public Key: N " + n + "e " + e);
-            Console.WriteLine("Private Key: N " + n + "d " + d);
+            //BigInteger e, d, n;
+            //GenerateKeys.GenerateKey(p, q, out n, out e, out d);
+            //Console.WriteLine("Public Key: N " + n + "e " + e);
+            //Console.WriteLine("Private Key: N " + n + "d " + d);
 
-            BigInteger message = string_op.StringToBigInteger(original);
-            Console.WriteLine("Message: " + message);
-            BigInteger cipher = Cryptosystem.encrypt(e,n,message);
-            BigInteger decrypt = Cryptosystem.decrypt(d, n, cipher);
-            string decrypted = string_op.BigIntegerToString(decrypt);
+            //BigInteger message = string_op.StringToBigInteger(original);
+            //Console.WriteLine("Message: " + message);
+            //BigInteger cipher = Cryptosystem.encrypt(e,n,message);
+            //BigInteger decrypt = Cryptosystem.decrypt(d, n, cipher);
+            //string decrypted = string_op.BigIntegerToString(decrypt);
 
-            Console.WriteLine("Original : " + original);
-            Console.WriteLine("Decrypted: " + decrypted);
+            //Console.WriteLine("Original : " + original);
+            //Console.WriteLine("Decrypted: " + decrypted);
 
-            int endtim5 = Environment.TickCount;
-            Console.WriteLine("Execution time for modulo: " + (endtim5 - startTime5) + " ms");
+            //int endtim5 = Environment.TickCount;
+            //Console.WriteLine("Execution time for modulo: " + (endtim5 - startTime5) + " ms");
 
         }
 

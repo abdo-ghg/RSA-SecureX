@@ -16,44 +16,6 @@ namespace RSA_SecureX
         private static List<int> time = new List<int>();
 
         // read the file from the pc 
-        public static bool ReadFileFrompc()
-        {
-            Console.WriteLine("Choose a .txt file:");//O(1)
-            Console.WriteLine("Press any key to open the file dialog...");//O(1)
-            Console.ReadKey();
-
-            string selectedFilePath = OpenFile();
-
-            if (string.IsNullOrEmpty(selectedFilePath))
-            {
-                Console.WriteLine("No file selected.");
-                return false;
-            }
-
-            if (Path.GetExtension(selectedFilePath).Equals(".txt", StringComparison.OrdinalIgnoreCase) && File.Exists(selectedFilePath))
-            {
-                filePath = selectedFilePath;//O(1)
-                Console.WriteLine($"Selected file: {filePath}");//O(1)
-                return true;//O(1)
-            }
-            else
-            {
-                Console.WriteLine("Invalid file! Must be a .txt file that exists.");//O(1)
-                return false;//O(1)
-            }
-        }
-
-        // select the file from the pc
-        private static string OpenFile()
-        {
-            var fileDialog = new OpenFileDialog
-            {
-                Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
-                Title = "Select a .txt file"
-            };
-
-            return fileDialog.ShowDialog() == DialogResult.OK ? fileDialog.FileName : null;
-        }
 
         // take the file path from the user
         public static bool ReadFileFromUser()
@@ -87,15 +49,14 @@ namespace RSA_SecureX
         }
 
         // read the file
-        public static bool ReadFile()
+        public static void ReadFile()
         {
             int choice;//O(1)
             do
             {
                 Console.WriteLine("\nChoose an option:");
-                Console.WriteLine("1 - Select a .txt file (File Dialog)");
-                Console.WriteLine("2 - Enter file path manually");
-                Console.WriteLine("3 - Exit");
+                Console.WriteLine("1 - Enter file path manually");
+                Console.WriteLine("2 - Exit");
                 Console.Write("Your choice: ");
 
                 choice = int.Parse(Console.ReadLine());
@@ -103,21 +64,17 @@ namespace RSA_SecureX
                 switch (choice)
                 {
                     case 1:
-                        if (ReadFileFrompc())
-                            return true;
+                        if (ReadFileFromUser())
+                            break;
                         break;
                     case 2:
-                        if (ReadFileFromUser())
-                            return true;
+                        return;
                         break;
-                    case 3:
-                        return false;
                     default:
                         Console.WriteLine("Invalid option! Try again.");
                         break;
                 }
-            } while (choice > 3);
-            return false;
+            } while (choice > 2 ||choice > 0);
         }
 
         // read the line in the file
