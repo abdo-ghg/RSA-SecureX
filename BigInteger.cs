@@ -54,13 +54,10 @@ namespace RSA_SecureX
         {
             digits = new List<byte>() { 0 };//O(1)
         }
-
         public BigInteger(BigInteger a)//O(1)
         {
             digits = a.digits;//O(1)
         }
-
-
         public BigInteger(string number)//T(N)=N+N then it is O(N) //checked
         {
 
@@ -142,18 +139,10 @@ namespace RSA_SecureX
 
             return new BigInteger(sub2Lists(a.digits, b.digits));//T(N)=N+N so it is O(N)
         }
-        public static BigInteger Mod(BigInteger a, BigInteger b)//O(N^1.585)
+        public static BigInteger Mod(BigInteger a, BigInteger b)//O(N log N)
         {
-            if (a < b)//O(N)
-                return new BigInteger(a);//O(1)
-            if (b == new BigInteger("0"))//O(N) because of the operator
-            {
-                Console.WriteLine("Can Not Divide By 0           Maynf3sh :(");//O(1)
-                return new BigInteger(0);//O(1)
-            }
-            BigInteger temp = floor(a, b);//O(N log N)
-            BigInteger result = sub(a, Multiply(temp, b));//O(N^1.585)+O(N)= O(N^1.585)
-            return result;//O(1)
+            BigInteger[] result = Div(a, b);//O(N log N)
+            return result[1];//O(1)
         }
         public static BigInteger[] Div(BigInteger a, BigInteger b)//O(N log N), Total time = time per recursive call * number of recursive calls
         {
@@ -177,6 +166,11 @@ namespace RSA_SecureX
                 return new BigInteger[] { q, r };//O(1)
             else
                 return new BigInteger[] { Add(q, new BigInteger(1)), sub(r, b) };//O(N)
+        }
+        public static BigInteger floor(BigInteger a, BigInteger b) //O(N log N)
+        {
+            BigInteger[] result = Div(a, b);  //O(N log N)
+            return result[0];
         }
         public static BigInteger Multiply(BigInteger a, BigInteger b)//O(N^1.585) //checked
         {
@@ -273,7 +267,6 @@ namespace RSA_SecureX
 
             return Add(Add(res1, res2), z0);//O(N)
         }
-
         private static List<byte> ShiftLeft(List<byte> digits, int shift) //O(N) T(N)=S+M //checked
         {
             if (digits.Count == 1 && digits[0] == 0)//O(1)
@@ -319,12 +312,6 @@ namespace RSA_SecureX
 
             return finalRes;//O(1)
         }
-        public static BigInteger floor(BigInteger a, BigInteger b)//O(N log N)
-        {
-            //BigInteger res = new BigInteger("0");
-            BigInteger[] result = Div(a, b);//O(N log N)
-            return result[0];//O(1)
-        }
         // alm8arna
         public int compare(BigInteger num)//O(N) total complexity
         { // 3amelha 3shan A3ml override ll Logical Operators
@@ -338,18 +325,21 @@ namespace RSA_SecureX
             }
             return 0;//O(1)
         }
-
-        //public override string ToString()
-        //{
-        //    string number = "";
-        //    for (int i = digits.Count - 1; i >= 0; i--)
-        //    {
-        //        number += (char)(digits[i] + '0');
-        //    }
-        //    return number;
-        //}
-
-
+        public static string Check(BigInteger a) //O(N log N)
+        {
+            BigInteger c = new BigInteger("2");
+            BigInteger x = Mod(a, c); //O(N log N)
+            return (x == new BigInteger(0)) ? "Even" : "Odd"; // O(N) + O(log N)
+        }
+        public override string ToString()
+        {
+            string number = "";
+            for (int i = digits.Count - 1; i >= 0; i--)
+            {
+                number += (char)(digits[i] + '0');
+            }
+            return number;
+        }
         public static BigInteger Sqrt(BigInteger N)//O(log(N) * N^1.585) //checked
         {
             if (N.digits.Count == 1 && N.digits[0] == 0)//O(1)
@@ -367,11 +357,10 @@ namespace RSA_SecureX
                 BigInteger mid = floor(Add(l, h), new BigInteger("2"));//O(N log N)+ O(N)+ O(N)= O(N log N)
                 BigInteger square = Multiply(mid, mid);//O(N^1.585)
 
-                int cmp = square == mid ? 0 : -1;//O(N) operator is big integer
-                if (cmp == 0)//O(1)
+                if (square == N)//O(1)
                     return mid;//O(1)
 
-                if (cmp < 0)//O(1)
+                if (square < N)//O(1)
                 {
                     l = Add(mid, new BigInteger("1"));//O(N)+O(1)= O(N)
                     finalRes = mid;//O(1) // Store floor value

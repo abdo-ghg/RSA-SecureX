@@ -40,3 +40,10 @@ C:\Users\DELL\Desktop\Projects\Algo Project\Team 2\Team 2\Off-line caching\[TEMP
 C:\Users\DELL\Desktop\Projects\Algo Project\Team 2\Team 2\Off-line caching\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.csproj.CoreCompileInputs.cache
 C:\Users\DELL\Desktop\Projects\Algo Project\Team 2\Team 2\Off-line caching\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.exe
 C:\Users\DELL\Desktop\Projects\Algo Project\Team 2\Team 2\Off-line caching\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.pdb
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\bin\Debug\OfflineCaching.exe.config
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\bin\Debug\OfflineCaching.exe
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\bin\Debug\OfflineCaching.pdb
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.csproj.AssemblyReference.cache
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.csproj.CoreCompileInputs.cache
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.exe
+C:\Users\George\Source\Repos\RSA-SecureX\[TEMPLATE]\Offline_Caching\obj\Debug\OfflineCaching.pdb

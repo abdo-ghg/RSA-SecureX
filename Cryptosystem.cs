@@ -23,7 +23,7 @@ namespace RSA_SecureX
         public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)//total of O(log n * N^1.585)
         {
             BigInteger result = new BigInteger(1);//O(1)
-            k = BigInteger.Mod(k, m);//O(N^1.585)
+            k = BigInteger.Mod(k, m);//O(N^1.585)   
             BigInteger zero = new BigInteger(0);//O(1)
             BigInteger one = new BigInteger(1);//O(log N)
 
@@ -31,13 +31,13 @@ namespace RSA_SecureX
             {
                 if ((n & one) == one)//O(N)
                 {
-                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)
+                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)    
                 }
 
                 n = n >> 1; //O(S* N log N)//divide by 2
 
                 //Pow
-                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)
+                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N^1.58)+O(N^1.58) = O(N^1.585)   k^2 mod m
             }//total of O(log n * N^1.585)
             return result;//O(1)
         }
@@ -52,6 +52,54 @@ namespace RSA_SecureX
         public static BigInteger decrypt(BigInteger d, BigInteger n, BigInteger cipher)// O(log n * N^1.585)
         {
             return ExpMod(cipher, d, n);// O(log n * N^1.585)
+        }
+
+
+        // Encrypt a string using RSA
+        //public static List<BigInteger> EncryptString(string message, BigInteger e, BigInteger n)
+        //{
+        //    byte[] data = Encoding.UTF8.GetBytes(message);
+        //    int blockSize = GetMaxBlockSize(n); // bytes per block
+        //    List<BigInteger> encryptedBlocks = new List<BigInteger>();
+
+        //    for (int i = 0; i < data.Length; i += blockSize)
+        //    {
+        //        int len = Math.Min(blockSize, data.Length - i);
+        //        byte[] block = new byte[len];
+        //        Array.Copy(data, i, block, 0, len);
+
+        //        BigInteger plain = BigInteger.BytesToBigInteger(block);
+        //        BigInteger cipher = encrypt(e, n, plain);
+        //        encryptedBlocks.Add(cipher);
+        //    }
+
+        //    return encryptedBlocks;
+        //}
+
+        //// Decrypt a list of BigIntegers back into string
+        //public static string DecryptToString(List<BigInteger> encrypted, BigInteger d, BigInteger n)
+        //{
+        //    List<byte> resultBytes = new List<byte>();
+        //    foreach (BigInteger cipher in encrypted)
+        //    {
+        //        BigInteger plain = decrypt(d, n, cipher);
+        //        byte[] bytes = BigInteger.BigIntegerToBytes(plain);
+        //        resultBytes.AddRange(bytes);
+        //    }
+        //    return Encoding.UTF8.GetString(resultBytes.ToArray());
+        //}
+
+        // Returns max number of bytes per block such that base-256 number < n
+        public static int GetMaxBlockSize(BigInteger n)
+        {
+            BigInteger test = new BigInteger(1);
+            int count = 0;
+            while (test < n)
+            {
+                test = BigInteger.Multiply(test, new BigInteger(256));
+                count++;
+            }
+            return count - 1; // ensure result < n
         }
 
 

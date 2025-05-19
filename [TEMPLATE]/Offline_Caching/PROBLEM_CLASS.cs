@@ -41,7 +41,8 @@ namespace Problem
             for (int i = 0; i < requests.Length; i++)
             {
                  request = requests[i];
-                if (!nextUse.ContainsKey(request)) nextUse[request] = new List<int>();
+                if (!nextUse.ContainsKey(request))
+                    nextUse[request] = new List<int>();
 
                 nextUse[request].Add(i);
             }

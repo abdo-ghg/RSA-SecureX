@@ -15,7 +15,7 @@ namespace RSA_SecureX
             while (b != new BigInteger("0"))//O(log(min(a,b))) euclidean algorithm
             {
                 BigInteger temp = b;//O(1)
-                b = BigInteger.Mod(a, b);//O(N^1.585)
+                b = BigInteger.Mod(a, b);//O(N^1.585)  b = a % b
                 a = temp;//O(1)
             }
 
@@ -91,20 +91,37 @@ namespace RSA_SecureX
         }
 
         // Prime numbers generate 
-        public static BigInteger GenerateLargePrime(int digits)///////////////////////////////////////////////////////////////////////////
-        {
-            Random rand = new Random();//O(1)
-            BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));//O(log digits)
-            BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);//O(log digits)
+        //public static BigInteger GenerateLargePrime(int digits)///////////////////////////////////////////////////////////////////////////
+        //{
+        //    Random rand = new Random();//O(1)
+        //    BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));//O(log digits)
+        //    BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);//O(log digits)
 
-            BigInteger candidate = new BigInteger();//O(1)
+        //    BigInteger candidate = new BigInteger();//O(1)
+
+        //    do
+        //    {
+        //        candidate = rand.NextLong(min, max);//O(N^1.585)
+        //    } while (!IsPrime(candidate));//O(sqrt(N) * N^1.585)
+
+        //    return candidate;//O(1)
+        //}
+
+
+        public static BigInteger GenerateLargePrime(int digits)
+        {
+            Random rand = new Random();
+            BigInteger min = new BigInteger((int)Math.Pow(10, digits - 1));
+            BigInteger max = new BigInteger((int)Math.Pow(10, digits) - 1);
+
+            BigInteger candidate = new BigInteger();
 
             do
             {
-                candidate = rand.NextLong(min, max);//O(N^1.585)
-            } while (!IsPrime(candidate));//O(sqrt(N) * N^1.585)
+                candidate = rand.NextLong(min, max);
+            } while (!IsPrime(candidate));
 
-            return candidate;//O(1)
+            return candidate;
         }
 
         static bool IsPrime(BigInteger number)//O(sqrt(N) * N^1.585) //checked
@@ -115,7 +132,7 @@ namespace RSA_SecureX
 
             if (number < two) return false;//O(N)
             if (number == two || number == three) return true;//O(N)
-            if (BigInteger.Mod(number, two) == zero) return false; //O(N ^ 1.585)
+            if (BigInteger.Mod(number, two) == zero) return false; //O(N ^ 1.585) Even
 
             BigInteger boundary = BigInteger.Sqrt(number);//O(log(N) * N^1.585)
 
