@@ -107,37 +107,6 @@ namespace RSA_SecureX
                     break;//O(1)
             }
         }
-
-        // Convert a byte array to a BigInteger (base 256)
-        public static BigInteger BytesToBigInteger(byte[] bytes)//O(L*N^1.585)
-        {
-            BigInteger result = new BigInteger(0);//O(1)
-            BigInteger base256 = new BigInteger(256);//O(log N)
-            for (int i = bytes.Length - 1; i >= 0; i--) //O(length)// Big-endian to little-endian logic
-            {
-                result = Add(Multiply(result, base256), new BigInteger((int)bytes[i]));//O(log N)+O(N^1.585)+O(N)=O(N^1.585)
-            }
-            return result;//O(1)
-        }
-
-        // Convert a BigInteger back to bytes (base 256)
-        public static byte[] BigIntegerToBytes(BigInteger number)//O(N^2 log N)
-        {
-            List<byte> bytes = new List<byte>();//O(1)
-            BigInteger base256 = new BigInteger(256);//O(log N)
-
-            while (number > new BigInteger(0))//O(N)
-            {
-                BigInteger[] divmod = Div(number,base256);//O(N log N)
-                number = divmod[0];//O(1)
-                bytes.Add((byte)divmod[1].ToInt());//O(N)
-            }
-
-            // Reverse to get the correct order for UTF-8
-            bytes.Reverse();//O(N)
-            return bytes.ToArray();//O(N)
-        }
-
         public int ToInt()//O(N)
         {
             int result = 0;//O(1)

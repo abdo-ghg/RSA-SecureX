@@ -33,8 +33,6 @@ namespace RSA_SecureX
                 number = divmod[0];
                 bytes.Add((byte)divmod[1].ToInt());
             }
-
-            // Bytes are in little-endian, reverse before UTF8 decoding
             bytes.Reverse();
 
             return Encoding.UTF8.GetString(bytes.ToArray());

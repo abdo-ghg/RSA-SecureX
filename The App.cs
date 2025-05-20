@@ -20,7 +20,8 @@ namespace RSA_SecureX
                 Console.WriteLine("1. Crypto System");
                 Console.WriteLine("2. Arithmetic Operations");
                 Console.WriteLine("3. Generate File & Keys");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("4. Cryptosystem for string");
+                Console.WriteLine("5. Exit");
                 Console.Write("Enter choice: ");
 
                 string choice = Console.ReadLine();
@@ -38,6 +39,9 @@ namespace RSA_SecureX
                         GenerateKey();
                         break;
                     case "4":
+                        theString();
+                        break;
+                    case "5":
                         exitRequested = true;
                         Console.WriteLine("Turning off program…");
                         break;
@@ -61,8 +65,10 @@ namespace RSA_SecureX
             {
                 Console.Clear();
                 Console.WriteLine("--- Crypto System ---");
+                Console.WriteLine();
                 Cryptosystem.CryptoTheMassege();
                 ManagerFiles.ChooseTheWay();
+                Console.WriteLine();
                 back = ret();
             }
         }
@@ -79,24 +85,29 @@ namespace RSA_SecureX
                 string firstInput = Console.ReadLine();
                 Console.Write("Enter second number: ");
                 string secondInput = Console.ReadLine();
+                Console.WriteLine();
                 Console.WriteLine(" --- Addition --- ");
                 int startTime = Environment.TickCount;
                 Console.WriteLine("The result is: " + add(new BigInteger(firstInput), new BigInteger(secondInput)));
                 int endTime = Environment.TickCount;
                 int duration = endTime - startTime;
                 Console.WriteLine("Execution time for addition: " + duration + " ms");
+                Console.WriteLine();
                 Console.WriteLine(" --- Subtraction --- ");
                 startTime = Environment.TickCount;
                 Console.WriteLine("The result is: " + sub(new BigInteger(firstInput), new BigInteger(secondInput)));
                 endTime = Environment.TickCount;
                 duration = endTime - startTime;
                 Console.WriteLine("Execution time for subtraction: " + duration + " ms");
+                Console.WriteLine();
                 Console.WriteLine(" --- Multiplication --- ");
                 startTime = Environment.TickCount;
                 Console.WriteLine("The result is: " + mul(new BigInteger(firstInput), new BigInteger(secondInput)));
                 endTime = Environment.TickCount;
                 duration = endTime - startTime;
                 Console.WriteLine("Execution time for multiplication: " + duration + " ms");
+                Console.WriteLine();
+
                 back = ret();
             }
         }
@@ -113,6 +124,7 @@ namespace RSA_SecureX
             return BigInteger.Multiply(a, b);
         }
         public static bool ret() {
+            Console.WriteLine();
             Console.WriteLine("Press 0 Return to Main Menu and any key to continu in this page:");
             string choice = Console.ReadLine();
             Console.WriteLine();
@@ -137,9 +149,29 @@ namespace RSA_SecureX
                 Console.WriteLine("n: " + n);
                 Console.WriteLine("e: " + e);
                 Console.WriteLine("d: " + d);
+                Console.WriteLine();
                 back = ret();
             }
 
+        }
+
+        static void theString()
+        {
+            Console.Clear();
+            bool back = false;
+            while (!back)
+            {
+
+                Console.Clear();
+                Console.WriteLine("--- Cryptosystem for String ---");
+                Console.WriteLine("Enter the string to encrypt");
+                string inputString = Console.ReadLine();
+
+                Console.WriteLine("Enter the key:");
+                string keyString = Console.ReadLine();
+                Console.WriteLine("Encrypting...");
+                back = ret();
+            }
         }
 
     }

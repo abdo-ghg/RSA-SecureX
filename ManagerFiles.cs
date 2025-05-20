@@ -15,8 +15,6 @@ namespace RSA_SecureX
         private static List<KeyValuePair<string, BigInteger>> result = new List<KeyValuePair<string, BigInteger>>();
         private static List<int> time = new List<int>();
 
-        // read the file from the pc 
-
         // take the file path from the user
         public static bool ReadFileFromUser()//O(1)
         {
@@ -56,7 +54,7 @@ namespace RSA_SecureX
             {
                 ReadFileFromUser();
 
-                if (string.IsNullOrEmpty(ManagerFiles.filePath))
+                if (string.IsNullOrEmpty(filePath))
                 {
                     Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
                     continue;
@@ -76,6 +74,7 @@ namespace RSA_SecureX
 
             try
             {
+                lines.Clear();//O(1)
                 lines = File.ReadAllLines(filePath).ToList();//O(N) N is the lines.count
                 if (lines.Count == 0)//O(1)
                 {
@@ -104,7 +103,9 @@ namespace RSA_SecureX
 
         public static string[] ReadTheLines()//O(N) N is the lines.count 
         {
+            filePath = null;//O(1)
             string[] lA = lines.ToArray();
+            lines.Clear();//O(1)
             return lA;
         }
         
@@ -112,11 +113,13 @@ namespace RSA_SecureX
         // save the results in the file
         public static void TheResults()
         {
+            result.Clear();//O(N)
             result = Cryptosystem.TheOutPut();
         }
 
         public static void TheTime()
         {
+            time.Clear();//O(N)
             time = Cryptosystem.TheTime();
         }
 
@@ -227,6 +230,8 @@ namespace RSA_SecureX
                 Console.WriteLine($"\nFile saved successfully at: {fullPath}");
                 Console.WriteLine($"File size: {fileInfo.Length} bytes");
                 Console.WriteLine($"Entries saved: {Math.Min(result.Count, time.Count)}");
+                result.Clear();//O(N)
+                time.Clear();//O(N)
                 return true;
             }
             catch (Exception ex)
@@ -235,6 +240,7 @@ namespace RSA_SecureX
                 Console.WriteLine("Please try again with different path/name.");
                 return false;
             }
+
         }
         public static void ChooseTheWay()
         {
@@ -268,6 +274,7 @@ namespace RSA_SecureX
                         break;
                 }
             } while (choice < 1 || choice > 3);
+  
         }
     }
 }

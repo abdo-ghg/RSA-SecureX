@@ -11,7 +11,7 @@ namespace RSA_SecureX
         [STAThread]
         static void Main(string[] args)
         {
-          The_App.menu();
+             The_App.menu();
         }
     }
 }

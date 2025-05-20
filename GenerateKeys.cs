@@ -60,7 +60,7 @@ namespace RSA_SecureX
 
             int duration = endTime - startTime;//O(1)
 
-            Console.WriteLine("Execution time for gcd while loop: " + duration + " ms");//O(1)
+            Console.WriteLine("Execution time for generate key function: " + duration + " ms");//O(1)
 
         }
 

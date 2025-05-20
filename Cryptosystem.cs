@@ -8,7 +8,6 @@ namespace RSA_SecureX
 {
     internal class Cryptosystem
     {
-        private static List<BigInteger> theResults = new List<BigInteger>(0);
         private static List<KeyValuePair<string, BigInteger>> result = new List<KeyValuePair<string, BigInteger>>();
         private static List<int> time = new List<int>();
         public struct TestCase
@@ -20,24 +19,24 @@ namespace RSA_SecureX
         }
         private static List<TestCase> testCases = new List<TestCase>();
 
-        public static BigInteger ExpMod(BigInteger k, BigInteger n, BigInteger m)//total of O(log n * N^1.585)
+        public static BigInteger ExpMod(BigInteger messs, BigInteger key, BigInteger n)//total of O(log n * N^1.585)
         {
             BigInteger result = new BigInteger(1);//O(log N)
-            k = BigInteger.Mod(k, m);//O(N log N)   
+            messs = BigInteger.Mod(messs, n);//O(N log N)   
             BigInteger zero = new BigInteger(0);//O(1)
             BigInteger one = new BigInteger(1);//O(log N)
 
-            while (n > zero)//O(log n)
+            while (key > zero)//O(log n)
             {
-                if ((n & one) == one)//O(N)
+                if ((key & one) == one)//O(N)
                 {
-                    result = BigInteger.Mod(BigInteger.Multiply(result, k), m);//O(N log N)+O(N^1.58) = O(N^1.585)    
+                    result = BigInteger.Mod(BigInteger.Multiply(result, messs), n);//O(N log N)+O(N^1.58) = O(N^1.585)    
                 }
 
-                n = n >> 1; //O(S* N log N)//divide by 2
+                key = key >> 1; //O(S* N log N)//divide by 2
 
                 //Pow
-                k = BigInteger.Mod(BigInteger.Multiply(k, k), m);//O(N log N)+O(N^1.58) = O(N^1.585)   k^2 mod m
+                messs = BigInteger.Mod(BigInteger.Multiply(messs, messs), n);//O(N log N)+O(N^1.58) = O(N^1.585)   k^2 mod m
             }//total of O(log n * N^1.585)
             return result;//O(1)
         }
@@ -54,20 +53,6 @@ namespace RSA_SecureX
             return ExpMod(cipher, d, n);// O(log n * N^1.585)
         }
 
-
-
-        // Returns max number of bytes per block such that base-256 number < n
-        public static int GetMaxBlockSize(BigInteger n)//O(log N* N^1.585) //checked
-        {
-            BigInteger test = new BigInteger(1);//O(log N)
-            int count = 0;//O(1)
-            while (test < n)//O(log N base 256)
-            {
-                test = BigInteger.Multiply(test, new BigInteger(256));//O(N^1.585)+O(log N) = O(N^1.585)
-                count++;//O(1)
-            }
-            return count - 1; //O(1)// ensure result < n
-        }
 
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
@@ -87,17 +72,19 @@ namespace RSA_SecureX
             }//O(L)*O(N) = O(L*N)
         }
 
-        public static void CryptoTheMassege()
+        public static void CryptoTheMassege() // O(N*L)
         {
             Console.Clear();
             ManagerFiles.ReadFile(); // O(N*L)
-
+            result.Clear();//O(N)
+            time.Clear();//O(N)
             try
             {
                 int theNOTC = ManagerFiles.ReadTheFirstLine();//O(N)
                 string[] lines = ManagerFiles.ReadTheLines();//O(N)
 
                 TheCases(lines); // o (L*N) //checked
+                lines = null;//O(1)
                 for (int i = 0; i < theNOTC; i++)
                 {
                     int startTime = Environment.TickCount;
@@ -108,12 +95,10 @@ namespace RSA_SecureX
                     if (b == "1")
                     {
                         result.Add(new KeyValuePair<string, BigInteger>("The Decrypted Massege ", decrypt(k, n, m)));// O(log n * N^1.585)
-                        theResults.Add(decrypt(k, n, m));// O(log n * N^1.585)
                     }
                     else
                     {
                         result.Add(new KeyValuePair<string, BigInteger>("The Encrypted Massege", encrypt(k, n, m)));// O(log n * N^1.585)
-                        theResults.Add(encrypt(k, n, m));// O(log n * N^1.585)
                     }
                     int endTime = Environment.TickCount;//O(1)
                     time.Add(endTime - startTime);//O(1)
@@ -124,6 +109,7 @@ namespace RSA_SecureX
                 Console.WriteLine($"Error processing file: {ex.Message}");//O(1)
                 Console.WriteLine("Please try again with a valid file.");//O(1)
             }
+            Console.WriteLine("The crypto system succuss ");//O(1)
         }
 
         public static List<KeyValuePair<string, BigInteger>> TheOutPut()//O(1)
