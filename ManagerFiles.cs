@@ -18,38 +18,38 @@ namespace RSA_SecureX
         // read the file from the pc 
 
         // take the file path from the user
-        public static bool ReadFileFromUser()
+        public static bool ReadFileFromUser()//O(1)
         {
-            Console.Write("Enter file path: ");
-            string userFilePath = Console.ReadLine()?.Trim();
+            Console.Write("Enter file path: ");//O(1)
+            string userFilePath = Console.ReadLine()?.Trim();//O(1)
 
             try
             {
-                if (string.IsNullOrEmpty(userFilePath))
+                if (string.IsNullOrEmpty(userFilePath))//O(1)
                 {
-                    Console.WriteLine("No path entered.");
-                    return false;
+                    Console.WriteLine("No path entered.");//O(1)
+                    return false;//O(1)
                 }
 
-                if (!File.Exists(userFilePath))
+                if (!File.Exists(userFilePath))//O(1)
                 {
-                    Console.WriteLine("File not found. Try again.");
-                    return false;
+                    Console.WriteLine("File not found. Try again.");//O(1)
+                    return false;//O(1)
                 }
 
-                filePath = userFilePath;
-                Console.WriteLine("File found.");
-                return true;
+                filePath = userFilePath;//O(1)
+                Console.WriteLine("File found.");//O(1)
+                return true;//O(1)
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error: {ex.Message}");//O(1)
+                return false;//O(1)
             }
         }
 
         // read the file
-        public static void ReadFile()
+        public static void ReadFile()//O(N)
         {
             int choice;//O(1)
             do
@@ -78,42 +78,42 @@ namespace RSA_SecureX
         }
 
         // read the line in the file
-        public static int ReadTheFirstLine()
+        public static int ReadTheFirstLine()//O(N) 
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath))//O(1)
             {
-                throw new InvalidOperationException("File path is not set. Please ensure a file is selected before proceeding.");
+                throw new InvalidOperationException("File path is not set. Please ensure a file is selected before proceeding.");//O(1)
             }
 
             try
             {
-                lines = File.ReadAllLines(filePath).ToList();
-                if (lines.Count == 0)
+                lines = File.ReadAllLines(filePath).ToList();//O(N) N is the lines.count
+                if (lines.Count == 0)//O(1)
                 {
-                    throw new InvalidOperationException("The file is empty.");
+                    throw new InvalidOperationException("The file is empty.");//O(1)
                 }
 
                 int numberOfTestCases;
-                if (!int.TryParse(lines[0], out numberOfTestCases))
+                if (!int.TryParse(lines[0], out numberOfTestCases))//O(1)
                 {
-                    throw new FormatException("The first line must be an integer representing the number of test cases.");
+                    throw new FormatException("The first line must be an integer representing the number of test cases.");//O(1)
                 }
 
-                if (numberOfTestCases <= 0)
+                if (numberOfTestCases <= 0)//O(1)
                 {
-                    throw new InvalidOperationException("The number of test cases must be positive.");
+                    throw new InvalidOperationException("The number of test cases must be positive.");//O(1)
                 }
 
-                lines.RemoveAt(0);
-                return numberOfTestCases;
+                lines.RemoveAt(0);//O(N) N is the size
+                return numberOfTestCases;//O(1)
             }
             catch (Exception ex) when (!(ex is InvalidOperationException || ex is FormatException))
             {
-                throw new IOException($"Error reading file: {ex.Message}", ex);
+                throw new IOException($"Error reading file: {ex.Message}", ex);//O(1)
             }
         }
 
-        public static string[] ReadTheLines()
+        public static string[] ReadTheLines()//O(N) N is the lines.count 
         {
             string[] lA = lines.ToArray();
             return lA;

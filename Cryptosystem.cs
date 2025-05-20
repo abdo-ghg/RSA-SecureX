@@ -53,7 +53,6 @@ namespace RSA_SecureX
         {
             return ExpMod(cipher, d, n);// O(log n * N^1.585)
         }
-<<<<<<< Updated upstream
 
 
         // Returns max number of bytes per block such that base-256 number < n
@@ -71,8 +70,6 @@ namespace RSA_SecureX
 
 
 
-=======
->>>>>>> Stashed changes
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
             int j = 0;//O(1)
@@ -91,16 +88,16 @@ namespace RSA_SecureX
             }//O(L)*O(N) = O(L*N)
         }
 
-        public static void CryptoTheMassege()
+        public static void CryptoTheMassege()// O(log n * N^2.5)
         {
             bool fileSelected = false;//O(1)
             while (!fileSelected)
             {
-                ManagerFiles.ReadFile();
+                ManagerFiles.ReadFile();//O(N)
 
-                if (string.IsNullOrEmpty(ManagerFiles.filePath))
+                if (string.IsNullOrEmpty(ManagerFiles.filePath))//O(1)
                 {
-                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
+                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");//O(1)
                     continue;
                 }
 
@@ -109,11 +106,11 @@ namespace RSA_SecureX
 
             try
             {
-                int theNOTC = ManagerFiles.ReadTheFirstLine();
-                string[] lines = ManagerFiles.ReadTheLines();
+                int theNOTC = ManagerFiles.ReadTheFirstLine();//O(N)
+                string[] lines = ManagerFiles.ReadTheLines();//O(N)
 
-                TheCases(lines);
-                for (int i = 0; i < theNOTC; i++)
+                TheCases(lines);//O(L*N)
+                for (int i = 0; i < theNOTC; i++)//O(N)
                 {
                     int startTime = Environment.TickCount;
                     BigInteger n = testCases[i].n;
@@ -122,13 +119,13 @@ namespace RSA_SecureX
                     string b = testCases[i].b;
                     if (b == "1")
                     {
-                        result.Add(new KeyValuePair<string, BigInteger>("The Decrypted Massege ", decrypt(k, n, m)));
-                        theResults.Add(decrypt(k, n, m));
+                        result.Add(new KeyValuePair<string, BigInteger>("The Decrypted Massege ", decrypt(k, n, m)));// O(log n * N^1.585)
+                        theResults.Add(decrypt(k, n, m));// O(log n * N^1.585)
                     }
                     else
                     {
-                        result.Add(new KeyValuePair<string, BigInteger>("The Encrypted Massege", encrypt(k, n, m)));
-                        theResults.Add(encrypt(k, n, m));
+                        result.Add(new KeyValuePair<string, BigInteger>("The Encrypted Massege", encrypt(k, n, m)));// O(log n * N^1.585)
+                        theResults.Add(encrypt(k, n, m));// O(log n * N^1.585)
                     }
                     int endTime = Environment.TickCount;//O(1)
                     time.Add(endTime - startTime);//O(1)
