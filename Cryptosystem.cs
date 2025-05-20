@@ -55,6 +55,7 @@ namespace RSA_SecureX
         }
 
 
+
         // Returns max number of bytes per block such that base-256 number < n
         public static int GetMaxBlockSize(BigInteger n)//O(log N* N^1.585) //checked
         {
@@ -70,6 +71,8 @@ namespace RSA_SecureX
 
 
 
+=======
+>>>>>>> Stashed changes
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
             int j = 0;//O(1)
@@ -93,11 +96,11 @@ namespace RSA_SecureX
             bool fileSelected = false;//O(1)
             while (!fileSelected)
             {
-                ManagerFiles.ReadFile();//O(N)
+                ManagerFiles.ReadFile();
 
-                if (string.IsNullOrEmpty(ManagerFiles.filePath))//O(1)
+                if (string.IsNullOrEmpty(ManagerFiles.filePath))
                 {
-                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");//O(1)
+                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
                     continue;
                 }
 
