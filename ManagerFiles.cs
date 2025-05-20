@@ -51,30 +51,19 @@ namespace RSA_SecureX
         // read the file
         public static void ReadFile()
         {
-            int choice;//O(1)
-            do
+            bool fileSelected = false;//O(1)
+            while (!fileSelected)
             {
-                Console.WriteLine("\nChoose an option:");
-                Console.WriteLine("1 - Enter file path manually");
-                Console.WriteLine("2 - Exit");
-                Console.Write("Your choice: ");
+                ReadFileFromUser();
 
-                choice = int.Parse(Console.ReadLine());
-
-                switch (choice)
+                if (string.IsNullOrEmpty(ManagerFiles.filePath))
                 {
-                    case 1:
-                        if (ReadFileFromUser())
-                            break;
-                        break;
-                    case 2:
-                        return;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option! Try again.");
-                        break;
+                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
+                    continue;
                 }
-            } while (choice > 2 ||choice > 0);
+
+                fileSelected = true;//O(1)
+            }
         }
 
         // read the line in the file
