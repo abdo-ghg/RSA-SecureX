@@ -27,26 +27,12 @@ namespace RSA_SecureX
         public static void GenerateKey(BigInteger p, BigInteger q, out BigInteger n, out BigInteger e, out BigInteger d)//O(log(min(e,phi)) * N^1.585 *phi)
         {
             int startTime = Environment.TickCount;//O(1)
-
             n = BigInteger.Multiply(p, q);//O(N^1.585)
             BigInteger phi = BigInteger.Multiply(BigInteger.sub(p, new BigInteger("1")), BigInteger.sub(q, new BigInteger("1")));//O(N^1.585)+O(N)+O(N)+O(log N)= O(N^1.585)
-
-            // 2. Get end time
-            int endTime = Environment.TickCount;//O(1)
-
-            // 3. Calculate duration
-            int duration = endTime - startTime;//O(1)
-
-            Console.WriteLine(phi);//O(1)
-
-            Console.WriteLine("Execution time for multiply: " + duration + " ms");//O(1)
-
 
             //e = 65537;
             //e = 3; // Start with a small odd integer
             e = new BigInteger("3");//O(N)
-
-            startTime = Environment.TickCount;//O(1)
 
             while (e < phi)//O(phi)
             {
@@ -57,18 +43,7 @@ namespace RSA_SecureX
                 e = BigInteger.Add(e, new BigInteger("1"));//O(N)
             }//total while loop O(phi * log(min(e,phi)) * N log N)
 
-            // 2. Get end time
-            endTime = Environment.TickCount;//O(1)
-
-            //3.Calculate duration
-            duration = endTime - startTime;//O(1)
-
-            Console.WriteLine("Execution time for gcd while loop: " + duration + " ms");//O(1)
-
-            //d = 0;
             d = new BigInteger("0");//O(N)
-
-            startTime = Environment.TickCount;//O(1)
 
             for (BigInteger i = new BigInteger("1"); i < phi; i = BigInteger.Add(i, new BigInteger("1")))// O(phi)
             {
@@ -81,11 +56,9 @@ namespace RSA_SecureX
                 }
             }//total for loop O(phi * N^1.585)
 
-            // 2. Get end time
-            endTime = Environment.TickCount;//O(1)
+            int  endTime = Environment.TickCount;//O(1)
 
-            // 3. Calculate duration
-            duration = endTime - startTime;//O(1)
+            int duration = endTime - startTime;//O(1)
 
             Console.WriteLine("Execution time for gcd while loop: " + duration + " ms");//O(1)
 

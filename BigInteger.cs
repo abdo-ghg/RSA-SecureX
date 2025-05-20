@@ -138,7 +138,6 @@ namespace RSA_SecureX
             return bytes.ToArray();//O(N)
         }
 
-
         public int ToInt()//O(N)
         {
             int result = 0;//O(1)
@@ -190,27 +189,21 @@ namespace RSA_SecureX
             BigInteger[] result = Div(a, b);//O(N log N)
             return result[1];//O(1)
         }
-
-
-
         public static BigInteger[] Div(BigInteger a, BigInteger b)//O(N log N), Total time = time per recursive call * number of recursive calls
         {
-            // Base case: if a is less than b, quotient is 0 and remainder is a
+            // a / b
             if (a < b)//O(N)
                 return new BigInteger[] { new BigInteger(0), a };//O(1)
 
             // Calculate 2*b
             BigInteger twoB = Add(b, b);//O(N)
 
-            // Recursive call with a and 2*b
             BigInteger[] temp = Div(a, twoB);//T(N)=T(N/2)+O(N) =  Θ(N)
             BigInteger q = temp[0];//O(1)
             BigInteger r = temp[1];//O(1)
 
-            // Double the quotient (q = 2*q)
             q = Add(q, q);//O(N)
 
-            // Check and adjust remainder and quotient if needed
             if (r < b)//O(N)
                 return new BigInteger[] { q, r };//O(1)
             else
@@ -221,15 +214,24 @@ namespace RSA_SecureX
             BigInteger[] result = Div(a, b);  //O(N log N)
             return result[0];//O(1)
         }
+
+        /*
+         * in the multiply function i used the Karatsuba algorithm to multiply two big integers
+         * a = x + y * 10^m   b = z + w * 10^m      a*b= xz + xw * 10^m + yz * 10^m + yw * 10^(2*m)    
+         * a * b = (aHigh * bHigh) * 10^(2*m) + ((aLow + aHigh) * (bLow + bHigh) - (aLow * bLow) - (aHigh * bHigh)) * 10^m + (aLow * bLow)
+         * res = z2 * 10^(2*m) + z1 * 10^m + z0
+         * z0 = aLow * bLow
+         * z1 = ((aLow + aHigh) * (bLow + bHigh) - z0 - z2)
+         * (aLow + aHigh) * (bLow + bHigh) = sAB
+         * z2 = aHigh * bHigh
+         */
         public static BigInteger Multiply(BigInteger a, BigInteger b)//O(N^1.585) //checked
         {
-            // Check for zero multiplication
             if ((a.digits.Count == 1 && a.digits[0] == 0) || (b.digits.Count == 1 && b.digits[0] == 0))//O(1)
             {
                 return new BigInteger("0"); //O(B) where B is the big int constructor complexity
             }
 
-            // Simple multiplication  
             if (a.digits.Count <= 4 || b.digits.Count <= 4)//O(1)
             {
                 List<byte> result = new List<byte>();//O(1)
@@ -256,7 +258,6 @@ namespace RSA_SecureX
             int n = Math.Max(a.digits.Count, b.digits.Count);//O(1)
             int m = n / 2;//O(1)
 
-            // Split a into high and low parts
             List<byte> aLDigits = new List<byte>();//O(1)
             List<byte> aHDigits = new List<byte>();//O(1)
 
@@ -278,7 +279,6 @@ namespace RSA_SecureX
             BigInteger aL = new BigInteger(aLDigits);//O(N/2)
             BigInteger aH = new BigInteger(aHDigits);//O(N/2) because i divide the a by half
 
-            // Split b into high and low parts
             List<byte> bLDigits = new List<byte>();//O(1)
             List<byte> bHDigits = new List<byte>();//O(1)
 
@@ -301,14 +301,17 @@ namespace RSA_SecureX
             BigInteger bH = new BigInteger(bHDigits);//O(M/2) because i divide the b by half
 
             // Karatsuba
+            // Master case 1 it is theta of 1 
             // T(N) = 3T(N / 2) + O(N) = O(N^log2(3)) = O(N^1.585)
             BigInteger z0 = Multiply(aL, bL);//O((N/2)^1.585)
             BigInteger z2 = Multiply(aH, bH);//O((N/2)^1.585)
 
             // z1 = (aLow + aHigh) * (bLow + bHigh) - z0 - z2
+            // z1 = sAB - z0 - z2
             BigInteger aS = Add(aL, aH);//O(N)
             BigInteger bS = Add(bL, bH);//O(N)
-            BigInteger z1 = sub(sub(Multiply(aS, bS), z0), z2);//O(N^1.585)+O(N)+O(N) = O(N^1.585)
+            BigInteger sAB = Multiply(aS, bS);//O((N/2)^1.585)
+            BigInteger z1 = sub(sub(sAB, z0), z2);//O(N^1.585)+O(N)+O(N) = O(N^1.585)
 
             // result = z2 * 10^(2*m) + z1 * 10^m + z0
             BigInteger res1 = new BigInteger(ShiftLeft(z2.digits, 2 * m));//O(N)
@@ -380,12 +383,12 @@ namespace RSA_SecureX
             BigInteger x = Mod(a, c); //O(N log N)
             return (x == new BigInteger(0)) ? "Even" : "Odd"; // O(N) + O(log N)
         }
-        public override string ToString()//O(N^2)
+        public override string ToString()//O(N)
         {
             string number = "";//O(1)
             for (int i = digits.Count - 1; i >= 0; i--)//O(N)
             {
-                number += (char)(digits[i] + '0');//O(N)
+                number += (char)(digits[i] + '0');//O(1)
             }
             return number;//O(1)
         }

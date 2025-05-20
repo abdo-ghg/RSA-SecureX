@@ -69,10 +69,6 @@ namespace RSA_SecureX
             return count - 1; //O(1)// ensure result < n
         }
 
-
-
-=======
->>>>>>> Stashed changes
         public static void TheCases(string[] lines)//O(L*N) //checked
         {
             int j = 0;//O(1)
@@ -91,29 +87,18 @@ namespace RSA_SecureX
             }//O(L)*O(N) = O(L*N)
         }
 
-        public static void CryptoTheMassege()// O(log n * N^2.5)
+        public static void CryptoTheMassege()
         {
-            bool fileSelected = false;//O(1)
-            while (!fileSelected)
-            {
-                ManagerFiles.ReadFile();
-
-                if (string.IsNullOrEmpty(ManagerFiles.filePath))
-                {
-                    Console.WriteLine("No file was selected. Please try again or press 1 to exit.");
-                    continue;
-                }
-
-                fileSelected = true;//O(1)
-            }
+            Console.Clear();
+            ManagerFiles.ReadFile(); // O(N*L)
 
             try
             {
                 int theNOTC = ManagerFiles.ReadTheFirstLine();//O(N)
                 string[] lines = ManagerFiles.ReadTheLines();//O(N)
 
-                TheCases(lines);//O(L*N)
-                for (int i = 0; i < theNOTC; i++)//O(N)
+                TheCases(lines); // o (L*N) //checked
+                for (int i = 0; i < theNOTC; i++)
                 {
                     int startTime = Environment.TickCount;
                     BigInteger n = testCases[i].n;
@@ -148,55 +133,6 @@ namespace RSA_SecureX
         public static List<int> TheTime()//O(1)
         {
             return time;//O(1)
-        }
-        public static void DisplayAllTestInformation()//O(N)
-        {
-            int maxCount = Math.Max(Math.Max(testCases.Count, time.Count), theResults.Count);//O(1)
-
-            for (int i = 0; i < maxCount; i++)//O(N)
-            {
-                Console.WriteLine($"\nTest Case {i + 1}:");//O(1)
-                Console.WriteLine("-----------------");//O(1)
-
-                if (i < testCases.Count)//O(1)
-                {
-                    Console.WriteLine($"n = {testCases[i].n}");//O(1)
-                    Console.WriteLine($"k = {testCases[i].k}");//O(1)
-                    Console.WriteLine($"m = {testCases[i].m}");//O(1)
-                    Console.WriteLine($"s = {testCases[i].b}");//O(1)
-                }
-                else
-                {
-                    Console.WriteLine("Test case information not available");//O(1)
-                }
-
-
-                if (i < time.Count)//O(1)
-                {
-                    Console.WriteLine($"Execution time: {time[i]} ms");//O(1)
-                }
-                else
-                {
-                    Console.WriteLine("Execution time not available");//O(1)
-                }
-
-                if (i < theResults.Count)//O(1)
-                {
-                    Console.WriteLine($"Result: {theResults[i]}");//O(1)
-                }
-                else
-                {
-                    Console.WriteLine("Result not available");//O(1)
-                }
-
-                Console.WriteLine("=================");//O(1)
-            }
-
-            if (testCases.Count != time.Count || testCases.Count != theResults.Count || time.Count != theResults.Count)//O(1)
-            {
-                Console.WriteLine($"\nWarning: Data count mismatch - Test Cases: {testCases.Count}, " +
-                                 $"Execution Times: {time.Count}, Results: {theResults.Count}");//O(1)
-            }
         }
     }
 }

@@ -107,6 +107,7 @@ namespace RSA_SecureX
             string[] lA = lines.ToArray();
             return lA;
         }
+        
 
         // save the results in the file
         public static void TheResults()
