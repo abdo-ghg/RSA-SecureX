@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Services;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -138,7 +139,7 @@ namespace RSA_SecureX
             }
         }
         static void GenerateKey() {
-            int digits = 3;
+            int digits = 4;
             bool back = false;
             while (!back)
             {
@@ -149,6 +150,14 @@ namespace RSA_SecureX
                 Console.WriteLine("n: " + n);
                 Console.WriteLine("e: " + e);
                 Console.WriteLine("d: " + d);
+
+                BigInteger message = new BigInteger("1234");
+
+                BigInteger chipher = Cryptosystem.ExpMod(message, e, n);
+
+                BigInteger decrpt = Cryptosystem.ExpMod(chipher, d, n);
+
+                Console.WriteLine(decrpt);
                 Console.WriteLine();
                 back = ret();
             }
@@ -159,17 +168,20 @@ namespace RSA_SecureX
         {
             Console.Clear();
             bool back = false;
+            int digits = 4;
             while (!back)
             {
-
                 Console.Clear();
                 Console.WriteLine("--- Cryptosystem for String ---");
-                Console.WriteLine("Enter the string to encrypt");
-                string inputString = Console.ReadLine();
+                Console.WriteLine();
+                Console.WriteLine("Enter any thing: ");
+                string str= Console.ReadLine();
+                BigInteger bi = string_op.StringToBigInteger(str);
+                Console.WriteLine("the big integer: " + bi);
+                string s = string_op.BigIntegerToString(bi);
+                Console.WriteLine("the string" + s);
+                Console.WriteLine();
 
-                Console.WriteLine("Enter the key:");
-                string keyString = Console.ReadLine();
-                Console.WriteLine("Encrypting...");
                 back = ret();
             }
         }

@@ -19,6 +19,9 @@ namespace RSA_SecureX
         }
         private static List<TestCase> testCases = new List<TestCase>();
 
+        //message power key mod n
+        //public n and e
+        //private n and d
         public static BigInteger ExpMod(BigInteger messs, BigInteger key, BigInteger n)//total of O(log n * N^1.585)
         {
             BigInteger result = new BigInteger(1);//O(log N)
@@ -92,7 +95,7 @@ namespace RSA_SecureX
                     BigInteger k = testCases[i].k;
                     BigInteger m = testCases[i].m;
                     string b = testCases[i].b;
-                    if (b == "1")
+                    if (b == "1")     // 1 ---> decrbet 
                     {
                         result.Add(new KeyValuePair<string, BigInteger>("The Decrypted Massege ", decrypt(k, n, m)));// O(log n * N^1.585)
                     }

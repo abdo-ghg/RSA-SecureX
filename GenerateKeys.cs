@@ -60,10 +60,9 @@ namespace RSA_SecureX
 
             int duration = endTime - startTime;//O(1)
 
-            Console.WriteLine("Execution time for generate key function: " + duration + " ms");//O(1)
+           // Console.WriteLine("Execution time for generate key function: " + duration + " ms");//O(1)
 
         }
-
 
 
         public static BigInteger GenerateLargePrime(int digits)//O(sqrt(N) * N^2)
@@ -82,6 +81,37 @@ namespace RSA_SecureX
             return candidate;//O(1)
         }
 
+        public static void testgenerate() {
+            int digits = 4;
+            bool test = false;
+            string sr = "1234";
+            BigInteger y = new BigInteger(sr);
+            BigInteger p = GenerateLargePrime(digits);
+            BigInteger q = GenerateLargePrime(digits);
+            while (!test)
+            {
+                BigInteger n, e, d;
+                GenerateKey(p, q, out n, out e, out d);
+                BigInteger big = Cryptosystem.ExpMod(y,e,n);
+                Console.WriteLine("n: " + n);
+                Console.WriteLine("e: " + e);
+                Console.WriteLine("d: " + d);
+
+                BigInteger z = Cryptosystem.ExpMod(big,d,n);
+                Console.WriteLine(z);
+                if (z == y)
+                {
+                    Console.WriteLine(z);
+                    test = true;
+                }
+                else
+                {
+                    Console.WriteLine(z);
+                    test = false;
+                }
+            }
+
+        }
         static bool IsPrime(BigInteger number)//O(sqrt(N) * N^1.585) //checked
         {
             BigInteger two = new BigInteger(2);//O(log N)
